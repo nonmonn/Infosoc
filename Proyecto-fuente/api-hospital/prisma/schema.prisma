@@ -1,0 +1,16 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+}
+
+model Pictograma {
+  id          Int      @id @default(autoincrement())
+  titulo      String
+  imagenUrl   String
+  categoria   String
+  descripcion String?
+  creadoEn    DateTime @default(now())
+}
