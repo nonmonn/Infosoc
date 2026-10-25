@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Mapa 3D · Psiquiatría y zonas seguras</title>
+<style>
+:root{--bg:#eef0f2;--fg:#1c2733;--card:#fff;--line:#d5d9de;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1b2027;--fg:#e8edf2;--card:#262d36;--line:#3a434e}}
+:root[data-theme="dark"]{--bg:#1b2027;--fg:#e8edf2;--card:#262d36;--line:#3a434e}
+html,body{height:100%;margin:0}
+body{background:var(--bg);color:var(--fg);font-family:system-ui,-apple-system,"Segoe UI",sans-serif;display:flex;flex-direction:column}
+header{padding:12px 16px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+h1{font-size:17px;margin:0}
+.leg{display:flex;gap:14px;font-size:13px;flex-wrap:wrap}
+.leg i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+#w{flex:1;min-height:0;touch-action:none;cursor:grab}
+svg{width:100%;height:100%;display:block}
+text{font-family:system-ui,sans-serif;font-weight:700;text-anchor:middle;paint-order:stroke;stroke:rgba(255,255,255,.85);stroke-width:3px;fill:#1c2733;pointer-events:none}
+.pulse{animation:p 1.6s infinite;transform-box:fill-box;transform-origin:center}
+@keyframes p{0%{transform:scale(.6);opacity:.9}100%{transform:scale(2.2);opacity:0}}
+</style></head><body>
+<header><h1>Hospital · Mapa 3D</h1>
+<div class="leg"><span><i style="background:#FFD33D"></i>Psiquiatría (Sector G)</span><span><i style="background:#1FA463"></i>Zona segura</span><span><i style="background:#b9bec4"></i>Otros edificios</span></div></header>
+<div id="w"><svg id="s" viewBox="-740 -90 1760 1100"></svg></div>
+<script>
+const P=(x,y,h=0)=>[(x-y)*.433,(x+y)*.25-h];
+const sv=document.getElementById('s'),NS='http://www.w3.org/2000/svg';
+const el=(t,a,p=sv)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);p.appendChild(e);return e};
+const pts=(arr,h)=>arr.map(p=>P(p[0],p[1],h).join(',')).join(' ');
+const shade=(hex,f)=>{const n=parseInt(hex.slice(1),16);return'rgb('+[n>>16,n>>8&255,n&255].map(c=>Math.min(255,Math.round(c*f))).join(',')+')'};
+const rect=(a,b,c,d)=>[[a,b],[c,b],[c,d],[a,d]];
+const flat=(poly,fill,h=0,extra={})=>el('polygon',{points:pts(poly,h),fill,...extra});
+// ground
+flat(rect(-40,-40,2330,1680),'#e3e6e9');
+flat(rect(0,1445,2330,1680),'#6a7078');
+flat(rect(0,1265,2330,1445),'#cfd3d7');
+flat(rect(0,920,1150,1265),'#7b8189');
+flat(rect(1320,920,1710,1200),'#7b8189');
+flat(rect(1710,1125,2090,1200),'#7b8189');
+flat(rect(2090,90,2225,1200),'#7b8189');
+flat(rect(1150,920,1320,1445),'#7b8189');
+flat(rect(75,722,1460,802),'#d3d6da');
+[[85,830,350,880],[505,830,770,880],[855,830,1120,880],[100,1008,455,1100],[515,1008,872,1100],[900,1008,1140,1100],[98,1215,452,1260],[515,1215,870,1260],[895,1215,1120,1260],[2045,150,2140,505],[2045,615,2140,970]].forEach(r=>flat(rect(...r),'#c4c8cd',0,{stroke:'#aeb3b9'}));
+flat(rect(1350,1008,1585,1105),'#c4c8cd',0,{stroke:'#aeb3b9'});
+// buildings [poly,height,color,label]
+const N='#b9bec4';
+const B=[
+[[[75,125],[420,125],[420,108],[520,108],[520,452],[305,452],[305,378],[75,378]],62,N,'A · Urgencia'],
+[[[75,412],[105,412],[105,380],[305,380],[305,452],[520,452],[520,625],[585,625],[585,670],[335,670],[335,648],[75,648]],62,N,'B'],
+[[[553,538],[553,595],[583,595],[583,670],[1122,670],[1122,480],[880,480],[880,510],[583,510],[583,538]],55,N,'C1'],
+[[[1122,500],[1310,500],[1310,450],[1403,450],[1403,500],[1495,500],[1495,525],[1527,525],[1527,580],[1495,580],[1495,615],[1557,615],[1557,668],[1122,668]],55,N,'C2'],
+[[[722,22],[967,22],[967,57],[882,57],[882,90],[1150,90],[1150,452],[722,452]],48,'#a4a9af','Acceso restringido'],
+[[[1222,260],[1495,260],[1495,448],[1222,448]],40,'#a4a9af','Acceso restringido'],
+[[[1557,427],[1762,427],[1762,735],[1670,735],[1557,737]],58,N,'D · Principal'],
+[[[1762,427],[2037,427],[2037,572],[2000,572],[2000,795],[1762,795]],58,N,'E · CAE'],
+[[[1810,290],[1832,290],[1832,427],[1810,427]],14,'#FFD33D',''],
+[[[1765,105],[1998,105],[1998,290],[1762,290],[1762,248],[1790,248],[1790,215],[1765,215]],62,'#FFD33D','G · Psiquiatría']
+];
+// safe zones (flat, drawn under buildings)
+const Z=[[100,57,300,100],[100,327,305,378],[1832,292,1998,425],[1470,748,1627,905],[1810,828,1955,925]];
+const zc=[];
+Z.forEach(r=>{const p=rect(...r);flat(p,'#16804d',0);flat(p,'#1FA463',5,{stroke:'#0f6b3f','stroke-width':2});
+ el('polygon',{points:pts(p,5),fill:'none'});zc.push([(r[0]+r[2])/2,(r[1]+r[3])/2])});
+B.map(b=>{const c=b[0].reduce((a,p)=>[a[0]+p[0],a[1]+p[1]],[0,0]);b.c=[c[0]/b[0].length,c[1]/b[0].length];return b})
+ .sort((a,b)=>(a.c[0]+a.c[1])-(b.c[0]+b.c[1])).forEach(([poly,h,col,lab,])=>{
+ let A=0;poly.forEach((p,i)=>{const q=poly[(i+1)%poly.length];A+=p[0]*q[1]-q[0]*p[1]});
+ const s=A>0?1:-1;
+ poly.forEach((p,i)=>{const q=poly[(i+1)%poly.length];const dx=q[0]-p[0],dy=q[1]-p[1];
+  const nx=s*dy,ny=-s*dx;if(nx+ny<=0)return;
+  const f=Math.abs(nx)>Math.abs(ny)?.8:.62;
+  el('polygon',{points:[P(p[0],p[1],0),P(q[0],q[1],0),P(q[0],q[1],h),P(p[0],p[1],h)].map(a=>a.join(',')).join(' '),fill:shade(col,f),stroke:shade(col,.5),'stroke-width':.6})});
+ el('polygon',{points:pts(poly,h),fill:shade(col,1.04),stroke:shade(col,.55),'stroke-width':1});
+});
+// labels
+B.forEach(b=>{if(!b[3])return;const [x,y]=P(b.c[0],b.c[1],b[1]+4);const hi=b[3].startsWith('G');
+ const t=el('text',{x,y,'font-size':hi?20:b[3].length>8?13:19});t.textContent=b[3]});
+zc.forEach(c=>{const [x,y]=P(c[0],c[1],18);const t=el('text',{x,y,'font-size':12,fill:'#0b4d2d'});t.textContent='Zona segura';t.style.fill='#0b4d2d'});
+// Psiquiatría entrance marker
+{const [x,y]=P(1998,200,6);el('circle',{cx:x,cy:y,r:9,fill:'#1f5fbf',opacity:.5,class:'pulse'});
+ el('circle',{cx:x,cy:y,r:7,fill:'#1f5fbf',stroke:'#fff','stroke-width':2});
+ const t=el('text',{x:x+6,y:y-14,'font-size':12});t.textContent='Entrada Psiquiatría';t.style.textAnchor='middle'}
+// other labels
+[['Carretera Principal',500,1360],['Rotonda',1467,1056],['Estacionamiento',275,1054],['Acera',1200,762]].forEach(([n,x,y])=>{const [px,py]=P(x,y,1);const t=el('text',{x:px,y:py,'font-size':13});t.textContent=n;t.style.fill='#5a636d'});
+// pan / zoom
+let vb=[-740,-90,1760,1100],drag=null;const set=()=>sv.setAttribute('viewBox',vb.join(' '));
+const w=document.getElementById('w');
+w.addEventListener('wheel',e=>{e.preventDefault();const r=sv.getBoundingClientRect(),k=e.deltaY>0?1.1:.9;
+ const mx=vb[0]+(e.clientX-r.left)/r.width*vb[2],my=vb[1]+(e.clientY-r.top)/r.height*vb[3];
+ vb=[mx-(mx-vb[0])*k,my-(my-vb[1])*k,vb[2]*k,vb[3]*k];set()},{passive:false});
+w.addEventListener('pointerdown',e=>{drag=[e.clientX,e.clientY];w.setPointerCapture(e.pointerId)});
+w.addEventListener('pointermove',e=>{if(!drag)return;const r=sv.getBoundingClientRect();
+ vb[0]-=(e.clientX-drag[0])*vb[2]/r.width;vb[1]-=(e.clientY-drag[1])*vb[3]/r.height;drag=[e.clientX,e.clientY];set()});
+w.addEventListener('pointerup',()=>drag=null);
+</script></body></html>

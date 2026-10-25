@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Sector G · Piso 1 · Modelo 3D</title>
+<style>
+:root{--bg:#eceef1;--fg:#1c2733;--card:#fff;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1b2027;--fg:#e8edf2;--card:#262d36}}
+:root[data-theme="dark"]{--bg:#1b2027;--fg:#e8edf2;--card:#262d36}
+html,body{height:100%;margin:0}
+body{background:var(--bg);color:var(--fg);font-family:system-ui,-apple-system,"Segoe UI",sans-serif;display:flex;flex-direction:column}
+header{padding:10px 16px;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+h1{font-size:17px;margin:0}
+.leg{display:flex;gap:14px;font-size:13px;flex-wrap:wrap;align-items:center}
+.leg i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:6px;vertical-align:-1px;border:1px solid rgba(0,0,0,.25)}
+button{font:inherit;font-size:13px;padding:6px 12px;border-radius:8px;border:1px solid #8884;background:var(--card);color:var(--fg);cursor:pointer}
+#c{flex:1;min-height:0;position:relative}
+canvas{display:block;width:100%;height:100%}
+</style></head><body>
+<header><h1>Sector G · Piso 1 — Psiquiatría</h1>
+<div class="leg"><span><i style="background:#8b7d8f"></i>Acceso restringido (vacío)</span><span><i style="background:#ecebef"></i>Acceso público</span><button id="b">Cortar muros</button></div></header>
+<div id="c"></div>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script>
+const S=.05,H=3,T=.2;
+const X=px=>(px-593)*S,Z=py=>(py-581)*S;
+const box=(w,h,d,col,x,y,z,p)=>{const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),new THREE.MeshStandardMaterial({color:col,roughness:.85}));m.position.set(x,y+h/2,z);m.castShadow=m.receiveShadow=true;(p||scene).add(m);return m};
+const wrap=document.getElementById('c');
+const scene=new THREE.Scene();
+const R=new THREE.WebGLRenderer({antialias:true,alpha:true});R.shadowMap.enabled=true;R.setPixelRatio(Math.min(devicePixelRatio,2));wrap.appendChild(R.domElement);
+const cam=new THREE.PerspectiveCamera(42,1,.1,200);cam.position.set(14,20,24);
+const ctl=new THREE.OrbitControls(cam,R.domElement);ctl.target.set(0,0,0);ctl.maxPolarAngle=Math.PI/2.05;ctl.enableDamping=true;
+scene.add(new THREE.HemisphereLight(0xffffff,0x9aa0aa,.85));
+const sun=new THREE.DirectionalLight(0xffffff,.7);sun.position.set(-10,25,12);sun.castShadow=true;sun.shadow.mapSize.set(2048,2048);
+Object.assign(sun.shadow.camera,{left:-16,right:16,top:16,bottom:-16,near:1,far:70});scene.add(sun);
+// floors (px rects)
+const floor=(a,b,c,d,col)=>box((c-a)*S,.1,(d-b)*S,col,X((a+c)/2),-.1,Z((b+d)/2));
+floor(412,390,512,772,0x8b7d8f);floor(512,390,775,480,0x8b7d8f);floor(512,685,775,772,0x8b7d8f);floor(512,480,775,685,0xecebef);
+box(40,.05,40,0xdfe2e6,0,-.16,0).receiveShadow=true;
+// walls
+const walls=new THREE.Group();scene.add(walls);
+const WC=0xd6d1da;
+const wall=(x1,y1,x2,y2,t=T,h=H,y0=0)=>{const w=Math.abs(X(x2)-X(x1))||t,d=Math.abs(Z(y2)-Z(y1))||t;const m=box(w,h,d,WC,X((x1+x2)/2),0,Z((y1+y2)/2),walls);m.geometry.translate(0,h/2-h/2,0);return m};
+// make wall scalable from base: reposition to base-origin
+function W(x1,y1,x2,y2,t=T){const w=Math.abs(X(x2)-X(x1))||t,d=Math.abs(Z(y2)-Z(y1))||t;const g=new THREE.BoxGeometry(w,H,d);g.translate(0,H/2,0);const m=new THREE.Mesh(g,new THREE.MeshStandardMaterial({color:WC,roughness:.9}));m.position.set(X((x1+x2)/2),0,Z((y1+y2)/2));m.castShadow=m.receiveShadow=true;walls.add(m)}
+const e=T/S/2;
+W(412-e,390-e,775+e,390+e);              // norte
+W(412-e,772-e,775+e,772+e);              // sur
+W(412-e,390,412+e,772);                  // oeste
+W(775-e,390,775+e,585);W(775-e,655,775+e,772); // este con vano de entrada
+W(512-e,390,512+e,772);                  // divisoria columna izquierda
+W(512,480-e,775,480+e);W(512,685-e,775,685+e); // divisorias sala de espera
+// dintel sobre entrada
+{const g=new THREE.BoxGeometry(T,.6,70*S);g.translate(0,H-.3,0);const m=new THREE.Mesh(g,new THREE.MeshStandardMaterial({color:WC}));m.position.set(X(775),0,Z(620));walls.add(m)}
+// marco amarillo de entrada
+box(.14,2.4,.14,0xFFD33D,X(775)+.05,0,Z(585));box(.14,2.4,.14,0xFFD33D,X(775)+.05,0,Z(655));box(.14,.14,70*S,0xFFD33D,X(775)+.05,2.4,Z(620));
+// sillas
+function chair(x,z){const g=new THREE.Group(),c=0x3b4250;const a=(w,h,d,px,py,pz)=>box(w,h,d,c,px,py,pz,g);
+ a(.55,.06,.5,0,.45,0);a(.55,.55,.06,0,.5,-.25);[[-.24,-.2],[.24,-.2],[-.24,.2],[.24,.2]].forEach(l=>a(.04,.45,.04,l[0],0,l[1]));
+ g.position.set(x,0,z);scene.add(g)}
+[503,540].forEach(py=>{for(let i=0;i<8;i++)chair(X(532+(i+.5)*20.6),Z(py))});
+// mesón en L
+const cw=0x5a5560,ct=0x9a95a2;
+function counter(a,b,c,d){const w=(c-a)*S,dd=(d-b)*S,x=X((a+c)/2),z=Z((b+d)/2);box(w,1.05,dd,cw,x,0,z);box(w+.1,.07,dd+.1,ct,x,1.05,z)}
+counter(532,604,639,625);counter(532,625,552,676);
+// etiquetas
+function label(txt,x,y,z,s=1,col='#1c2733'){const c=document.createElement('canvas');c.width=512;c.height=128;const g=c.getContext('2d');g.font='700 54px system-ui,sans-serif';g.textAlign='center';g.textBaseline='middle';g.lineWidth=10;g.strokeStyle='rgba(255,255,255,.9)';g.strokeText(txt,256,64);g.fillStyle=col;g.fillText(txt,256,64);
+ const sp=new THREE.Sprite(new THREE.SpriteMaterial({map:new THREE.CanvasTexture(c),depthTest:false}));sp.scale.set(5*s,1.25*s,1);sp.position.set(x,y,z);sp.renderOrder=9;scene.add(sp)}
+label('Sala de Espera',X(640),2.2,Z(572));
+label('Entrada Psiquiatría',X(775)+3.4,2.6,Z(620),.9,'#1f5fbf');
+label('Recepción',X(590),1.9,Z(615),.6);
+label('Sector restringido',X(462),1.5,Z(580),.7,'#4a3f50');label('Sector restringido',X(643),1.5,Z(435),.7,'#4a3f50');label('Sector restringido',X(643),1.5,Z(728),.7,'#4a3f50');
+// flecha de entrada
+{const sh=new THREE.Shape();sh.moveTo(0,0);sh.lineTo(.5,.5);sh.lineTo(.5,.2);sh.lineTo(1.4,.2);sh.lineTo(1.4,-.2);sh.lineTo(.5,-.2);sh.lineTo(.5,-.5);sh.closePath();
+ const m=new THREE.Mesh(new THREE.ShapeGeometry(sh),new THREE.MeshBasicMaterial({color:0x1f5fbf,side:2}));m.rotation.x=-Math.PI/2;m.position.set(X(775)+.5,.02,Z(620));scene.add(m)}
+// UI
+let cut=false;document.getElementById('b').onclick=function(){cut=!cut;walls.children.forEach(m=>m.scale.y=cut?.18:1);this.textContent=cut?'Muros completos':'Cortar muros'};
+function rs(){const w=wrap.clientWidth,h=wrap.clientHeight;R.setSize(w,h);cam.aspect=w/h;cam.updateProjectionMatrix()}
+addEventListener('resize',rs);rs();
+(function a(){requestAnimationFrame(a);ctl.update();R.render(scene,cam)})();
+</script></body></html>
