@@ -1,0 +1,30 @@
+Paleta de Colores Cálidos
+- Amarillo Oro (Paneles 1 y 3)
+HEX: #FBBB0E
+RGB: 251, 187, 14
+
+Uso: Ideal para fondos principales o tarjetas de información destacada.
+
+- Naranja Cálido (Paneles 2 y 4)
+HEX: #F38918
+RGB: 243, 137, 24
+
+Uso: Perfecto para botones de llamada a la acción (CTA) o para diferenciar secciones alternas.
+
+- Amarillo Sol (Tono claro derivado)
+HEX: #FDD052
+RGB: 253, 208, 82
+
+Uso: Útil para estados de hover (al pasar el cursor) en botones amarillos o para iluminaciones sutiles.
+
+- Naranja Intenso (Tono oscuro derivado)
+HEX: #D86E00
+RGB: 216, 110, 0
+
+Uso: Excelente para sombras, bordes, o texto sobre fondos más claros.
+
+- Blanco Puro (Íconos y texto)
+HEX: #FFFFFF
+RGB: 255, 255, 255
+
+Uso: Necesario para mantener un alto contraste y legibilidad sobre los amarillos y naranjas.
