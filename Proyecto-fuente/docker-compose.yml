@@ -1,0 +1,53 @@
+version: '3.8'
+
+services:
+  # 1. Servidor de la PWA (Angular)
+  frontend:
+    build: 
+      context: ./app-hospital-pwa
+      dockerfile: Dockerfile
+    ports:
+      - "4200:4200"
+    volumes:
+      - ./app-hospital-pwa:/app
+      - /app/node_modules
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+    depends_on:
+      - api # Asegura que la API levante primero
+
+  # 2. Servidor de la API REST (Node.js)
+  api:
+    build:
+      context: ./api-hospital
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./api-hospital:/app
+      - /app/node_modules
+    environment:
+      # Conecta la API directamente con el contenedor de la base de datos
+      - DB_HOST=postgres-db
+      - DB_PORT=5432
+      - DB_USER=hospital_user
+      - DB_PASSWORD=hospital_pass
+      - DB_NAME=hospital_db
+    depends_on:
+      - postgres-db
+
+  # 3. Servidor de Base de Datos
+  postgres-db:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: hospital_user
+      POSTGRES_PASSWORD: hospital_pass
+      POSTGRES_DB: hospital_db
+    ports:
+      - "5432:5432"
+    volumes:
+      # Persiste los datos de PostgreSQL localmente para no perderlos al apagar Docker
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:
