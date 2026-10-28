@@ -1,13 +1,23 @@
 # See https://docs.github.com/get-started/getting-started-with-git/ignoring-files for more about ignoring files.
 
+# Credenciales y variables de entorno (¡CRÍTICO!)
+.env
+**/.env
+
+# Herramientas de IA y entorno local
+.agents/
+.claude/
+.cursor/
+.devin/
+
 # Compiled output
-/dist
-/tmp
-/out-tsc
-/bazel-out
+dist/
+tmp/
+out-tsc/
+bazel-out/
 
 # Node
-/node_modules
+node_modules/
 npm-debug.log
 yarn-error.log
 
@@ -32,20 +42,13 @@ yarn-error.log
 # Miscellaneous
 **/.angular/cache
 .sass-cache/
-/connect.lock
-/coverage
-/libpeerconnection.log
+connect.lock
+coverage/
+libpeerconnection.log
 testem.log
-/typings
+typings/
 __screenshots__/
 
 # System files
 .DS_Store
 Thumbs.db
-
-node_modules/
-.env
-.agents/
-.claude/
-.cursor/
-.devin/
