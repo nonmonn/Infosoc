@@ -6,11 +6,34 @@ datasource db {
   provider = "mysql"
 }
 
+// Catalogo de los pictogramas disponibles
 model Pictograma {
-  id          Int      @id @default(autoincrement())
-  titulo      String
-  imagenUrl   String
-  categoria   String
-  descripcion String?
-  creadoEn    DateTime @default(now())
+  id          Int         @id @default(autoincrement())
+  titulo       String      // ej: "Girar a la derecha", "Baño", "Ascensor"
+  imagenUrl    String      // La ruta de la imagen o el nombre del archivo
+  pasosRuta  PasoRuta[] // Relación con los pasos donde se usa
+}
+
+// 2. Las rutas lógicas del hospital
+model Ruta {
+  id          Int         @id @default(autoincrement())
+  nombre      String      // ej: "Entrada Principal a Urgencias"
+  origen      String      // ej: "Entrada Principal"
+  destino     String      // ej: "Urgencias"
+  pasos       PasoRuta[] // Todos los pasos que componen esta ruta
+}
+
+// 3. Tabla intermedia que da el ORDEN exacto a los pictogramas en una ruta
+model PasoRuta {
+  id           Int       @id @default(autoincrement())
+  orden        Int       // 1, 2, 3... (El orden en el carrusel de Angular)
+  
+  rutaId       Int
+  ruta         Ruta     @relation(fields: [rutaId], references: [id], onDelete: Cascade)
+  
+  idPictograma  Int
+  pictograma    Pictograma @relation(fields: [idPictograma], references: [id])
+
+  // Evita que haya dos "pasos 1" en la misma ruta
+  @@unique([rutaId, orden]) 
 }

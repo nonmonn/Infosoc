@@ -25,3 +25,6 @@
 - Para el backend la ip que sirve es: http://127.0.0.1:3000  
 - Para el front sirve la ip: http://127.0.0.1:4200  
 - O tambien corre en el localhost: http://localhost:4200
+
+
+npx prisma studio, para ver la bd
