@@ -22,11 +22,11 @@
   <!-- Menú Desplegable (Controlado por Angular) -->
   @if (menuAbierto) {
 <!-- Menú de Escritorio -->
-    <nav class="absolute top-full left-0 w-full mt-2 bg-white rounded-2xl shadow-lg p-4 flex flex-col gap-4 text-gray-600 font-medium z-50 md:hidden">
-      <a routerLink="/" (click)="toggleMenu()" routerLinkActive="text-naranja-calido font-bold" [routerLinkActiveOptions]="{exact: true}" class="hover:text-naranja-intenso text-lg transition-colors border-b border-gray-100 pb-2">Inicio</a>
-      <a routerLink="/rutas" (click)="toggleMenu()" routerLinkActive="text-naranja-calido font-bold" class="hover:text-naranja-intenso text-lg transition-colors border-b border-gray-100 pb-2">Mapa</a>
-      <a href="#" (click)="toggleMenu()" class="hover:text-naranja-intenso text-lg transition-colors border-b border-gray-100 pb-2">Mis Rutas</a>
-      <a href="#" (click)="toggleMenu()" class="hover:text-naranja-intenso text-lg transition-colors">Ajustes</a>
+    <nav class="hidden md:flex items-baseline gap-6 text-gray-600 text-lg font-medium">
+      <a routerLink="/" routerLinkActive="text-naranja-calido font-bold" [routerLinkActiveOptions]="{exact: true}" class="hover:text-naranja-intenso cursor-pointer transition-colors">Inicio</a>
+      <a routerLink="/rutas" routerLinkActive="text-naranja-calido font-bold" class="hover:text-naranja-intenso transition-colors">Mapa</a>
+      <a href="#" class="hover:text-naranja-intenso transition-colors">Mis Rutas</a>
+      <a href="#" class="hover:text-naranja-intenso transition-colors">Ajustes</a>
     </nav>
   }
 </div>

@@ -76,22 +76,40 @@
   </div>
 </div>
 
-    <!-- Destinos Frecuentes -->
+<!-- Destinos Frecuentes -->
     <div class="flex flex-col gap-6">
-      <h3 class="font-bold text-gray-700 ml-2">Lugares Frecuentes</h3>
-      <div *ngFor="let destino of destinosFrecuentes" class="bg-white rounded-3xl p-6 shadow-sm flex items-center gap-4 hover:shadow-md transition cursor-pointer">
-        <div [class]="destino.color + ' w-16 h-16 rounded-full flex-shrink-0 flex items-center justify-center text-white text-2xl'">
-          📍
+      <h3 class="font-bold text-gray-700 ml-2">Rutas</h3>
+      
+      <div *ngFor="let destino of destinosFrecuentes" 
+           (click)="accionLugar(destino)"
+           class="bg-white rounded-3xl p-6 shadow-sm flex flex-col hover:shadow-md transition cursor-pointer">
+        
+        <!-- Cabecera de la tarjeta (Ícono + Texto + Botón) -->
+        <div class="flex items-center gap-4">
+          <div [class]="destino.color + ' w-16 h-16 rounded-full flex-shrink-0 flex items-center justify-center text-white text-2xl'">
+            📍
+          </div>
+          <div>
+            <h3 class="font-bold text-lg">{{ destino.titulo }}</h3>
+            <p class="text-gray-500 text-xs mb-2">{{ destino.descripcion }}</p>
+            <button [class]="destino.color + ' text-white px-4 py-1 rounded-full text-xs font-bold hover:opacity-80 transition inline-flex items-center gap-1'">
+              <span>{{ destino.btn }}</span>
+              <span *ngIf="destino.opciones">{{ destino.abierto ? '▴' : '▾' }}</span>
+            </button>
+          </div>
         </div>
-        <div>
-          <h3 class="font-bold text-lg">{{ destino.titulo }}</h3>
-          <p class="text-gray-500 text-xs mb-2">{{ destino.descripcion }}</p>
-          <button [class]="destino.color + ' text-white px-4 py-1 rounded-full text-xs font-bold hover:opacity-80 transition'">
-            {{ destino.btn }}
+        <!-- Mini menú desplegable (Solo aparece si tiene opciones y está abierto) -->
+        <div *ngIf="destino.abierto" 
+             (click)="$event.stopPropagation()" 
+             class="mt-4 pt-3 border-t border-gray-100 flex flex-col gap-2">
+          <p class="text-xs font-semibold text-gray-400 px-1">Selecciona el piso:</p>
+          <button *ngFor="let piso of destino.opciones"
+                  (click)="seleccionarPiso(destino.titulo, piso)"
+                  class="w-full text-left px-3 py-2 rounded-xl text-xs font-bold text-gray-700 bg-gray-50 hover:bg-orange-50 hover:text-naranja-calido transition flex justify-between items-center">
+            <span>{{ piso }}</span>
+            <span>➡️</span>
           </button>
         </div>
-      </div>
-    </div>
 
   </div>
 </div>

@@ -37,3 +37,34 @@ model PasoRuta {
   // Evita que haya dos "pasos 1" en la misma ruta
   @@unique([rutaId, orden]) 
 }
+
+//Cosas Rutas PRUEBA
+model Nodo {
+  id          Int      @id @default(autoincrement())
+  codigo      String   @unique // ej: "ent-principal", "esquina-1", "rayos-x"
+  nombre      String   // ej: "Entrada Principal", "Pasillo Central", "Rayos X"
+  esDestino   Boolean  @default(false) // true si aparece en el selector del usuario
+  aristasOut  Arista[] @relation("NodoOrigen")
+  aristasIn   Arista[] @relation("NodoDestino")
+}
+
+model Arista {
+  id          Int      @id @default(autoincrement())
+  origenId    Int
+  destinoId   Int
+  distancia   Float    @default(1) // Peso para calcular la ruta más corta
+  accesible   Boolean  @default(true) // false si tiene escaleras
+  origen      Nodo     @relation("NodoOrigen", fields: [origenId], references: [id])
+  destino     Nodo     @relation("NodoDestino", fields: [destinoId], references: [id])
+  tramos      Tramo[]
+}
+
+model Tramo {
+  id            Int    @id @default(autoincrement())
+  aristaId      Int
+  orden         Int    // 1, 2, 3 (orden en que salen las fotos en ese pasillo)
+  imagenUrl     String // ej: "/assets/recorridos/pasillo1_01.webp"
+  pictogramaUrl String // ej: "/assets/pictogramas/seguir_recto.png"
+  instruccion   String // ej: "Camina recto por el pasillo amarillo"
+  arista        Arista @relation(fields: [aristaId], references: [id])
+}
