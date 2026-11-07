@@ -7,6 +7,7 @@ services:
       dockerfile: Dockerfile
     ports:
       - "4200:4200"
+    #command: npx ng serve --host 0.0.0.0
     volumes:
       - ./app-hospital-pwa:/app
       - /app/node_modules

@@ -28,3 +28,35 @@
 
 
 npx prisma studio, para ver la bd
+
+## Para abrirlo en el celu:
+
+OJITOOO: 
+
+esto no es 100% seguro de hacerlo en redes de wifi públicas o semi públicas (como la de la U), es más seguro en redes privadas (como las de la casa)
+
+Como requisito el pc y el celu deben estar conectadas a la misma red
+
+Por ahora, esto funciona solo para el front, ya cuando conectemos las rutas con el backend parece que no va a funcionar :c
+
+
+ahora si las instrucciones :p
+
+- En el archivo angular.json agregar la dirección de ip del wifi a los "alowedHost" (aprox en la línea 67)
+
+    ejemplo: "allowedHosts": ["localhost", "127.0.0.1", "192.XXX.X.85"] 
+    (no voy a poner mi ip completa en el readme lol)
+
+    - HAY QUE ACORDARSE DE ELIMINAR ESA IP DE LOS ALLOWEDHOST ANTES DE HACER PUSH!!!!!
+
+- En el archivo docker-compose.yml descomentar esta línea
+    command: npx ng serve --host 0.0.0.0
+
+- Abrir Powershel como administrador (OJO, abrir POWERSHEL!!! no el CMD, ya me paso upsi) y ejecutar (es como una regla para abrir acceso al puerto o algo así no se):
+    New-NetFirewallRule -DisplayName "App Hospital (Docker)" -Direction Inbound -LocalPort 4200,3000 -Protocol TCP -Action Allow
+
+- Luego, hacer correr  la pag con el docker compose y en el celu meterse al link:
+    http://192.XXX.X.85:4200 (esto es: http://[Direccion IP wifi]:4200)
+
+- dsp de hacer todo, ejecutar en POWERSHELL como administrador esto para eliminar la regla de antes (hay que hacerlo por seguridad de nuestros pc lol):
+    Remove-NetFirewallRule -DisplayName "App Hospital Frontend"
