@@ -1,90 +1,84 @@
 <div class="min-h-screen bg-gray-50 p-8 font-sans">
   <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
     
-    <!-- Selector de Destino -->
+    <!-- Selector de Destino en Cascada -->
     <div class="flex flex-col gap-8">
       <div class="bg-white rounded-3xl p-6 shadow-sm flex flex-col items-center text-center">
+        
         <div class="w-20 h-20 bg-amarillo-oro rounded-full flex items-center justify-center mb-4">
           <span class="text-white text-4xl">📍</span>
         </div>
         <h2 class="text-xl font-bold mb-2">¿Hacia dónde deseas ir?</h2>
-        <p class="text-gray-500 text-sm mb-6">Selecciona tu destino en el hospital.</p>
+        <p class="text-gray-500 text-sm mb-6">Selecciona el sector y luego tu zona específica.</p>
         
-        <div class="w-full text-left mb-6">
-          <select class="block appearance-none w-full bg-gray-100 border border-gray-200 text-gray-700 py-3 px-4 rounded-xl leading-tight focus:outline-none focus:bg-white focus:border-naranja-calido font-bold text-lg text-center cursor-pointer">
-            <option value="psiquiatria" selected>🧠 Psiquiatría</option>
-            <option disabled>Más áreas próximamente...</option>
+        <!-- 1. Menú Desplegable de Sectores -->
+        <div class="w-full text-left mb-4">
+          <label class="block text-xs font-bold text-gray-400 mb-2 uppercase tracking-wide">1. Selecciona un Sector</label>
+          <select (change)="alCambiarSector($event)" 
+                  class="block appearance-none w-full bg-gray-50 border border-gray-200 text-gray-700 py-3 px-4 rounded-xl focus:outline-none focus:bg-white focus:border-naranja-calido font-bold text-lg cursor-pointer">
+            <option value="" disabled selected>-- Elige un sector --</option>
+            
+            <option *ngFor="let sector of sectoresDelHospital" [value]="sector.nombreSector">
+              🏢 {{ sector.nombreSector }}
+            </option>
+            
           </select>
         </div>
 
-        <button class="bg-naranja-calido text-white px-6 py-3 rounded-full font-bold hover:bg-naranja-intenso w-full transition text-lg shadow-md">Trazar Ruta</button>
+        <!-- 2. Menú Desplegable de Zonas (Solo aparece si se eligió un sector) -->
+        <div class="w-full text-left mb-6" *ngIf="sectorSeleccionado">
+          <label class="block text-xs font-bold text-gray-400 mb-2 uppercase tracking-wide">2. Selecciona la Zona</label>
+          <select (change)="alCambiarZona($event)" 
+                  class="block appearance-none w-full bg-orange-50 border border-naranja-calido text-gray-700 py-3 px-4 rounded-xl focus:outline-none focus:bg-white font-bold text-lg cursor-pointer">
+            <option value="" disabled selected>-- ¿A qué lugar exacto? --</option>
+            
+            <option *ngFor="let zona of sectorSeleccionado.zonas" [value]="zona.idNodo">
+              ➡️ {{ zona.nombre }}
+            </option>
+
+          </select>
+        </div>
+
+        <!-- 3. NUEVO: Checkbox de accesibilidad trasladado aquí -->
+        <label class="flex items-center gap-3 mb-6 cursor-pointer text-gray-600 font-medium hover:text-orange-500 transition w-full text-left">
+          <input type="checkbox" (change)="toggleAccesibilidad($event)" class="w-5 h-5 accent-orange-500 cursor-pointer rounded">
+          <span>♿ Necesito ruta sin escaleras</span>
+        </label>
+
+        <!-- Botón para Iniciar Ruta (Se deshabilita si no han elegido zona) -->
+        <button (click)="iniciarRutaDesdeSelectores()" 
+                [disabled]="!zonaSeleccionada"
+                [class]="zonaSeleccionada ? 'bg-naranja-calido text-white hover:bg-naranja-intenso shadow-md cursor-pointer' : 'bg-gray-200 text-gray-400 cursor-not-allowed'"
+                class="px-6 py-3 rounded-full font-bold w-full transition text-lg">
+          Trazar Ruta
+        </button>
+        
       </div>
     </div>
 
-  <!-- Mapa / Pictogramas -->
-<div class="lg:col-span-2 bg-white rounded-3xl p-8 shadow-sm flex flex-col items-center text-center">
-  <h2 class="text-2xl font-bold mb-2">Recorrido Virtual</h2>
-  <p class="text-gray-500 mb-6">Desliza hacia los lados para ver el siguiente paso.</p>
-  
-  <!-- Carrusel horizontal -->
-  <div class="w-full max-w-xs mx-auto relative mb-6">
-  <div class="flex overflow-x-auto snap-x snap-mandatory gap-4 pb-4 w-full no-scrollbar" style="scrollbar-width: none;">
-    
-    <!-- Paso 1 -->
-    <div class="snap-center shrink-0 w-full bg-white rounded-[2.5rem] p-5 border-8 border-gray-100 flex flex-col items-center justify-between aspect-[9/16] shadow-lg">
-      <div class="w-full h-3/4 flex items-center justify-center mb-4">
-        <img src="/imagenes/imagen 1.jpg" alt="Entrada Principal" class="w-full h-full object-contain drop-shadow-md">
+    <!-- Presentación del Nuevo Mapa -->
+    <div class="lg:col-span-2 bg-white rounded-3xl p-8 shadow-sm flex flex-col items-center justify-center text-center">
+      <div class="w-32 h-32 bg-orange-50 rounded-full flex items-center justify-center mb-6">
+        <span class="text-6xl">🗺️</span>
       </div>
-      <div class="text-center w-full h-1/4 flex flex-col justify-end pb-4">
-        <span class="font-bold text-gray-700 text-xl block">1. Entrada Principal</span>
-        <span class="text-gray-400 text-sm mt-2 block animate-pulse">Desliza ➡️</span>
-      </div>
-    </div>
-    
-    <!-- Paso 2 -->
-    <div class="snap-center shrink-0 w-full bg-white rounded-[2.5rem] p-5 border-8 border-gray-100 flex flex-col items-center justify-between aspect-[9/16] shadow-lg">
-      <div class="w-full h-3/4 flex items-center justify-center mb-4">
-        <img src="/imagenes/imagen 1.jpg" alt="Sigue la línea azul" class="w-full h-full object-contain drop-shadow-md">
-      </div>
-      <div class="text-center w-full h-1/4 flex flex-col justify-end pb-4">
-        <span class="font-bold text-gray-700 text-xl block">2. Sigue la línea azul</span>
-        <span class="text-gray-400 text-sm mt-2 block">⬅️ Desliza ➡️</span>
-      </div>
+      <h2 class="text-3xl font-bold mb-4 text-gray-700">Nuevo Mapa Interactivo</h2>
+      <p class="text-gray-500 mb-8 max-w-md text-lg">
+        Nuestro sistema ahora calcula automáticamente la ruta más corta y te ofrece opciones sin escaleras para tu comodidad.
+      </p>
+      
+      <button routerLink="/rutas" class="bg-amarillo-oro text-white px-8 py-4 rounded-full font-bold hover:bg-amarillo-sol transition text-lg shadow-md w-full max-w-sm">
+        Iniciar Recorrido Virtual
+      </button>
     </div>
 
-    <!-- Paso 3 -->
-    <div class="snap-center shrink-0 w-full bg-orange-50 rounded-[2.5rem] p-5 border-8 border-naranja-calido flex flex-col items-center justify-between aspect-[9/16] shadow-lg">
-      <div class="w-full h-3/4 flex items-center justify-center mb-4">
-        <img src="/imagenes/imagen 1.jpg" alt="Psiquiatría" class="w-full h-full object-contain drop-shadow-md">
-      </div>
-      <div class="text-center w-full h-1/4 flex flex-col justify-end pb-4">
-        <span class="font-bold text-naranja-calido text-xl block">3. Llegada a Psiquiatría</span>
-        <span class="text-naranja-calido text-sm mt-2 block font-bold">📍 Llegaste</span>
-      </div>
-    </div>
-
-  </div>
-</div>
-
-  <div class="flex flex-col sm:flex-row gap-4 w-full max-w-sm">
-    <button class="bg-amarillo-oro text-white px-6 py-3 rounded-full font-bold hover:bg-amarillo-sol transition flex-1 text-sm shadow-sm">
-      Iniciar Recorrido
-    </button>
-    <button (click)="guardarRuta()" class="bg-white border-2 border-naranja-calido text-naranja-calido px-6 py-3 rounded-full font-bold hover:bg-orange-50 transition flex-1 text-sm">
-      ⭐ Guardar Ruta
-    </button>
-  </div>
-</div>
-
-<!-- Destinos Frecuentes -->
+    <!-- Destinos Frecuentes -->
     <div class="flex flex-col gap-6">
-      <h3 class="font-bold text-gray-700 ml-2">Rutas</h3>
+      <h3 class="font-bold text-gray-700 ml-2">Rutas Frecuentes</h3>
       
       <div *ngFor="let destino of destinosFrecuentes" 
            (click)="accionLugar(destino)"
            class="bg-white rounded-3xl p-6 shadow-sm flex flex-col hover:shadow-md transition cursor-pointer">
         
-        <!-- Cabecera de la tarjeta (Ícono + Texto + Botón) -->
         <div class="flex items-center gap-4">
           <div [class]="destino.color + ' w-16 h-16 rounded-full flex-shrink-0 flex items-center justify-center text-white text-2xl'">
             📍
@@ -92,13 +86,14 @@
           <div>
             <h3 class="font-bold text-lg">{{ destino.titulo }}</h3>
             <p class="text-gray-500 text-xs mb-2">{{ destino.descripcion }}</p>
-            <button [class]="destino.color + ' text-white px-4 py-1 rounded-full text-xs font-bold hover:opacity-80 transition inline-flex items-center gap-1'">
-              <span>{{ destino.btn }}</span>
-              <span *ngIf="destino.opciones">{{ destino.abierto ? '▴' : '▾' }}</span>
+            
+            <button routerLink="/rutas" [class]="destino.color + ' text-white px-4 py-1 rounded-full text-xs font-bold hover:opacity-80 transition inline-flex items-center gap-1'">
+              <span>Trazar ruta acá</span>
             </button>
           </div>
         </div>
-        <!-- Mini menú desplegable (Solo aparece si tiene opciones y está abierto) -->
+
+        <!-- Mini menú desplegable de pisos -->
         <div *ngIf="destino.abierto" 
              (click)="$event.stopPropagation()" 
              class="mt-4 pt-3 border-t border-gray-100 flex flex-col gap-2">
@@ -110,6 +105,9 @@
             <span>➡️</span>
           </button>
         </div>
+
+      </div>
+    </div>
 
   </div>
 </div>

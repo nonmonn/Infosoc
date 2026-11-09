@@ -14,9 +14,8 @@ services:
     environment:
       - CHOKIDAR_USEPOLLING=true
     depends_on:
-      - api # Asegura que la API levante primero
-
-  # 2. Servidor de la API REST (Node.js)
+      - api
+#servidor en node.js
   api:
     build:
       context: ./api-hospital
@@ -27,7 +26,6 @@ services:
       - ./api-hospital:/app
       - /app/node_modules
     environment:
-      # Conecta la API directamente con el contenedor de la base de datos
       - DB_HOST=db
       - DB_PORT=3306
       - DB_USER=hospital_user
@@ -51,22 +49,5 @@ services:
     volumes:
       - mysql_data:/var/lib/mysql
 
-# 4. Interfaz de Prisma Studio
-  studio:
-    build:
-      context: ./api-hospital
-      dockerfile: Dockerfile
-    ports:
-      - "5555:5555"
-    volumes:
-      - ./api-hospital:/app
-      - /app/node_modules
-    environment:
-      # Conexión interna dentro de la red de Docker
-      - DATABASE_URL=mysql://hospital_user:hospital_pass@db:3306/hospital_db
-    # Fuerzas a que levante en la IP comodín para que sea accesible desde tu navegador
-    command: npx prisma studio --port 5555 --hostname 0.0.0.0
-    depends_on:
-      - db
 volumes:
   mysql_data:

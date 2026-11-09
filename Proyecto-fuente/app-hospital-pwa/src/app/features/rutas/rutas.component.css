@@ -1,0 +1,85 @@
+.contenedor-rutas {
+  padding: 1rem;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.panel-busqueda {
+  background: #f8f9fa;
+  padding: 1.5rem;
+  border-radius: 12px;
+  margin-bottom: 2rem;
+}
+
+.inputs-grupo {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.input-id {
+  width: 100%;
+  padding: 0.8rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+
+.checkbox-accesibilidad {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  font-weight: 500;
+}
+
+.btn-buscar {
+  width: 100%;
+  padding: 1rem;
+  background-color: #0056b3; /* Ajusta al color del hospital */
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+/* Estilos de las Tarjetas de la Ruta */
+.lista-instrucciones {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.tarjeta-paso {
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.foto-pasillo {
+  width: 100%;
+  height: 250px;
+  object-fit: cover;
+}
+
+.info-inferior {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+}
+
+.icono-pictograma {
+  width: 60px;
+  height: 60px;
+  object-fit: contain;
+}
+
+.texto-instruccion {
+  font-size: 1.1rem;
+  font-weight: 500;
+  margin: 0;
+  color: #333;
+}

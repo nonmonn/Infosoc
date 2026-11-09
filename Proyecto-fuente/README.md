@@ -20,11 +20,21 @@
 
     y volver a intentar el paso 2.
 
+4. Si quieren abrir el prisma studio, tienen que estar en la carpeta api-hospital y ejecutar:
+    - `npx prisma studio`
+
+si hacen cambios en el modelo para que en el studio este actualizado el modelo hay que hacer:
+    - `npx prisma db push`
+luego:
+    -`npx prisma generate`
+y realizar el primer comando para hacer el servidor.
+
 ## IPs:
 
 - Para el backend la ip que sirve es: http://127.0.0.1:3000  
 - Para el front sirve la ip: http://127.0.0.1:4200  
 - O tambien corre en el localhost: http://localhost:4200
+- Para el Prisma Studio ip (manejar y ver la bd): http://localhost:51212 
 
 
 npx prisma studio, para ver la bd

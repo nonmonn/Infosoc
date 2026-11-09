@@ -3,15 +3,13 @@
   <header class="flex justify-between items-center bg-white p-4 rounded-2xl shadow-sm">
       <h1 class="text-2xl font-bold text-gray-800">Proyecto Infosoc</h1>
       
-      <!-- Menú de Escritorio -->
-    <nav class="hidden md:flex gap-6 text-gray-600 font-medium">
-      <a routerLink="/" routerLinkActive="text-naranja-calido font-bold" [routerLinkActiveOptions]="{exact: true}" class="hover:text-naranja-intenso font-medium text-lg cursor-pointer transition-colors">Inicio</a>
-      <a routerLink="/rutas" routerLinkActive="text-naranja-calido font-bold" class="hover:text-naranja-intenso transition-colors">Mapa</a>
-      <a href="#" class="hover:text-naranja-intenso transition-colors">Mis Rutas</a>
-      <a href="#" class="hover:text-naranja-intenso transition-colors">Ajustes</a>
-    </nav>
+      <nav class="hidden md:flex items-center gap-6 text-gray-600 font-medium">
+        <a routerLink="/" routerLinkActive="text-naranja-calido font-bold" [routerLinkActiveOptions]="{exact: true}" class="hover:text-naranja-intenso cursor-pointer transition-colors">Inicio</a>
+        <a routerLink="/dashboard" routerLinkActive="text-naranja-calido font-bold" class="hover:text-naranja-intenso transition-colors">Mapa</a>
+        <a href="#" class="hover:text-naranja-intenso transition-colors">Mis Rutas</a>
+        <a href="#" class="hover:text-naranja-intenso transition-colors">Ajustes</a>
+      </nav>
 
-      <!-- Botón de las 3 barritas (Solo visible en celular) -->
       <button (click)="toggleMenu()" class="md:hidden text-gray-800 focus:outline-none p-1 hover:text-naranja-intenso transition-colors">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
@@ -19,14 +17,12 @@
       </button>
   </header>
 
-  <!-- Menú Desplegable (Controlado por Angular) -->
   @if (menuAbierto) {
-<!-- Menú de Escritorio -->
-    <nav class="hidden md:flex items-baseline gap-6 text-gray-600 text-lg font-medium">
-      <a routerLink="/" routerLinkActive="text-naranja-calido font-bold" [routerLinkActiveOptions]="{exact: true}" class="hover:text-naranja-intenso cursor-pointer transition-colors">Inicio</a>
-      <a routerLink="/rutas" routerLinkActive="text-naranja-calido font-bold" class="hover:text-naranja-intenso transition-colors">Mapa</a>
-      <a href="#" class="hover:text-naranja-intenso transition-colors">Mis Rutas</a>
-      <a href="#" class="hover:text-naranja-intenso transition-colors">Ajustes</a>
+    <nav class="absolute top-full left-0 w-full mt-2 bg-white rounded-2xl shadow-lg p-4 flex flex-col gap-4 text-gray-600 font-medium z-50 md:hidden">
+      <a routerLink="/" (click)="toggleMenu()" routerLinkActive="text-naranja-calido font-bold" [routerLinkActiveOptions]="{exact: true}" class="hover:text-naranja-intenso transition-colors border-b border-gray-100 pb-2">Inicio</a>
+      <a routerLink="/dashboard" (click)="toggleMenu()" routerLinkActive="text-naranja-calido font-bold" class="hover:text-naranja-intenso transition-colors border-b border-gray-100 pb-2">Mapa</a>
+      <a href="#" (click)="toggleMenu()" class="hover:text-naranja-intenso transition-colors border-b border-gray-100 pb-2">Mis Rutas</a>
+      <a href="#" (click)="toggleMenu()" class="hover:text-naranja-intenso transition-colors">Ajustes</a>
     </nav>
   }
 </div>

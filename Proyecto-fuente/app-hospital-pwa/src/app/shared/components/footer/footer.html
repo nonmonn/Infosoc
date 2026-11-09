@@ -1,1 +1,39 @@
-<p>footer works!</p>
+<footer class="bg-white border-t border-gray-100 mt-10 rounded-t-3xl shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
+  <div class="max-w-7xl mx-auto px-6 py-10">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-10 text-center md:text-left">
+      
+      <!-- Columna 1: Marca y Descripción -->
+      <div class="flex flex-col items-center md:items-start">
+        <h2 class="text-2xl font-bold text-gray-800">MediPortal Accesible</h2>
+        <p class="mt-4 text-gray-500 max-w-xs">
+          Tu guía visual para navegar por el hospital de forma autónoma, segura y sin estrés.
+        </p>
+      </div>
+
+      <!-- Columna 2: Enlaces Rápidos -->
+      <div class="flex flex-col items-center md:items-start gap-3">
+        <h3 class="font-bold text-gray-800 text-lg mb-2">Navegación</h3>
+        <a routerLink="/" class="text-gray-500 hover:text-naranja-calido font-medium transition-colors">Inicio</a>
+        <a routerLink="/rutas" class="text-gray-500 hover:text-naranja-calido font-medium transition-colors">Mapa del Hospital</a>
+        <a href="#" class="text-gray-500 hover:text-naranja-calido font-medium transition-colors">Mis Rutas</a>
+      </div>
+
+      <!-- Columna 3: Ayuda -->
+      <div class="flex flex-col items-center md:items-start gap-3">
+        <h3 class="font-bold text-gray-800 text-lg mb-2">¿Necesitas ayuda?</h3>
+        <p class="text-gray-500">Acércate al mesón de informaciones principal en el primer piso.</p>
+        <button class="mt-3 bg-orange-50 text-naranja-intenso font-bold py-3 px-6 rounded-2xl hover:bg-orange-100 transition-colors w-full md:w-auto">
+          Llamar a Asistencia
+        </button>
+      </div>
+
+    </div>
+
+    <!-- Línea divisoria y Copyright -->
+    <div class="border-t border-gray-100 mt-10 pt-6 text-center">
+      <p class="text-gray-400 font-medium">
+        &copy; 2026 Proyecto Infosoc. Todos los derechos reservados.
+      </p>
+    </div>
+  </div>
+</footer>
