@@ -39,7 +39,15 @@ y realizar el primer comando para hacer el servidor.
 
 npx prisma studio, para ver la bd
 
-## Para abrirlo en el celu:
+## Para crear un link:
+
+1. Instalar Cloudfare
+
+2. levantar la pag
+
+3. Para crear un link, ejecutar: cloudflared tunnel --url http://localhost:4200 
+
+## Para abrirlo en el celu (ya no sirve esto creo wuajaja):
 
 OJITOOO: 
 
