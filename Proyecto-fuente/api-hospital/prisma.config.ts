@@ -3,6 +3,9 @@ import { defineConfig, env } from "prisma/config";
 
 export default defineConfig({
   schema: "prisma/schema.prisma",
+  migrations: {
+    seed: "ts-node ./prisma/seed.ts", // 👈 Aquí agregamos el comando
+  },
   datasource: {
     url: env("DATABASE_URL"),
   },

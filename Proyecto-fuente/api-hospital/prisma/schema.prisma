@@ -7,46 +7,44 @@ datasource db {
 }
 
 model Pictograma {
-  id        Int      @id @default(autoincrement())
-  titulo    String   // ej: "Girar a la derecha", "Ascensor"
-  imagenUrl String   // Ruta de la imagen
-  tramos    Tramo[]  // Relación con los tramos de los pasillos
+  id        Int     @id @default(autoincrement())
+  titulo    String
+  imagenUrl String
+
+  tramos    Tramo[] // Relación con los tramos de Dijkstra
 }
 
-// 2. Puntos físicos del hospital
 model Nodo {
-  id         Int      @id @default(autoincrement())
-  codigo     String   @unique
-  nombre     String
-  esDestino  Boolean  @default(false)
-  aristasOut Arista[] @relation("NodoOrigen")
-  aristasIn  Arista[] @relation("NodoDestino")
+  id        String   @id
+  nombre    String
+  piso      Int
+  esDestino Boolean  @default(false)
+
+  aristasOrigen  Arista[] @relation("NodoOrigen")
+  aristasDestino Arista[] @relation("NodoDestino")
 }
 
-// 3. Pasillos o conexiones
 model Arista {
-  id         Int      @id @default(autoincrement())
-  origenId   Int
-  destinoId  Int
-  distancia  Float    @default(1)
-  accesible  Boolean  @default(true)
-  
-  origen     Nodo     @relation("NodoOrigen", fields: [origenId], references: [id])
-  destino    Nodo     @relation("NodoDestino", fields: [destinoId], references: [id])
-  tramos     Tramo[]
+  id        Int     @id @default(autoincrement())
+  origenId  String
+  destinoId String
+  distancia Float
+  accesible Boolean @default(true)
+
+  origen  Nodo @relation("NodoOrigen", fields: [origenId], references: [id])
+  destino Nodo @relation("NodoDestino", fields: [destinoId], references: [id])
+
+  tramos Tramo[]
 }
 
-// 4. Instrucciones visuales paso a paso
 model Tramo {
-  id           Int        @id @default(autoincrement())
+  id           Int    @id @default(autoincrement())
   aristaId     Int
-  orden        Int        // Orden de las fotos en este pasillo
-  imagenUrl    String     // Foto real del hospital
-  instruccion  String     // Texto de apoyo
-  
-  arista       Arista     @relation(fields: [aristaId], references: [id])
-  
-  // Relación directa con tu catálogo para no repetir URLs
+  orden        Int
+  imagenUrl    String
+  instruccion  String
   idPictograma Int
-  pictograma   Pictograma @relation(fields: [idPictograma], references: [id])
+
+  arista     Arista     @relation(fields: [aristaId], references: [id], onDelete: Cascade)
+  pictograma Pictograma @relation(fields: [idPictograma], references: [id], onDelete: Restrict)
 }
