@@ -159,11 +159,27 @@ export class DashboardComponent implements OnInit {
   }
 
   private irAPaso(n: number) {
-    this.pasoActual.set(n);
-    if (this.pasosTutorial[n].zona === 'misrutas') {
-      this.medirMisRutas();
-    }
+  this.pasoActual.set(n);
+  const zona = this.pasosTutorial[n].zona;
+  if (zona === 'misrutas') {
+    this.medirMisRutas();
   }
+  this.desplazarAZona(zona);
+}
+
+// En celulares/tablets: lleva la pantalla hasta la zona que se está explicando
+private desplazarAZona(zona: ZonaTutorial) {
+  if (!isPlatformBrowser(this.platformId)) return;
+  if (window.innerWidth >= 1024) return; // en pantallas grandes todo se ve a la vez
+
+  if (zona === 'misrutas') {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    return;
+  }
+
+  document.getElementById('zona-' + zona)
+    ?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
 
   // Busca el botón "Mis Rutas" del menú y calcula dónde poner el resaltado y el globo
   private medirMisRutas() {
@@ -195,6 +211,7 @@ export class DashboardComponent implements OnInit {
   verTutorial() {
     this.pasoActual.set(0);
     this.mostrarTutorial.set(true);
+    this.desplazarAZona(this.pasosTutorial[0].zona);
   }
 
   // --- LÓGICA DE LOS MENÚS DESPLEGABLES Y ACCESIBILIDAD ---

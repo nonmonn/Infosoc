@@ -1,8 +1,9 @@
-<div class="min-h-screen bg-gray-50 p-8 font-sans">
+<div class="min-h-screen bg-gray-50 p-8 font-sans"
+      [class.pb-64]="mostrarTutorial()">
   <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
 
     <!-- Selector de Destino en Cascada -->
-    <div class="flex flex-col gap-8 relative"
+    <div id ="zona-selector" class ="flex flex-col gap-8 relative scroll-mt-4"
          [class.z-110]="zonaActual() === 'selector'">
       <div class="bg-white rounded-3xl p-6 shadow-sm flex flex-col items-center text-center transition"
            [class.ring-4]="zonaActual() === 'selector'"
@@ -62,7 +63,7 @@
            y abajo de la pantalla en celulares -->
       @if (zonaActual() === 'selector') {
         <div class="fixed left-4 right-4 bottom-4 lg:absolute lg:left-full lg:right-auto lg:bottom-auto lg:top-6 lg:ml-4 lg:w-80
-                    bg-white rounded-3xl p-6 text-center shadow-xl"
+                    bg-white rounded-3xl p-4 lg:p-6 text-center shadow-xl"
              role="dialog" aria-labelledby="titulo-tutorial">
           <div class="hidden lg:block absolute -left-2 top-10 w-4 h-4 bg-white rotate-45"></div>
           <ng-container *ngTemplateOutlet="contenidoTutorial"></ng-container>
@@ -71,7 +72,7 @@
     </div>
 
     <!-- Presentación del Nuevo Mapa -->
-    <div class="lg:col-span-2 bg-white rounded-3xl p-8 shadow-sm flex flex-col items-center justify-center text-center relative"
+      <div id="zona-mapa" class="lg:col-span-2 bg-white rounded-3xl p-8 shadow-sm flex flex-col items-center justify-center text-center relative scroll-mt-4"
          [class.z-110]="zonaActual() === 'mapa'"
          [class.ring-4]="zonaActual() === 'mapa'"
          [class.ring-naranja-calido]="zonaActual() === 'mapa'">
@@ -90,7 +91,7 @@
       <!-- Globo del tutorial (pasos 2 y 3): al lado derecho de esta tarjeta -->
       @if (zonaActual() === 'mapa') {
         <div class="fixed left-4 right-4 bottom-4 lg:absolute lg:left-full lg:right-auto lg:bottom-auto lg:top-6 lg:ml-4 lg:w-64 xl:w-72
-                    bg-white rounded-3xl p-5 text-center shadow-xl"
+                    bg-white rounded-3xl p-4 lg:p-5 text-center shadow-xl"
              role="dialog" aria-labelledby="titulo-tutorial">
           <div class="hidden lg:block absolute -left-2 top-10 w-4 h-4 bg-white rotate-45"></div>
           <ng-container *ngTemplateOutlet="contenidoTutorial"></ng-container>
@@ -99,7 +100,7 @@
     </div>
 
     <!-- Destinos Frecuentes -->
-    <div class="flex flex-col gap-6 relative rounded-3xl"
+    <div id="zona-frecuentes" class="flex flex-col gap-6 relative rounded-3xl scroll-mt-4"
          [class.z-110]="zonaActual() === 'frecuentes'"
          [class.ring-4]="zonaActual() === 'frecuentes'"
          [class.ring-naranja-calido]="zonaActual() === 'frecuentes'">
@@ -141,7 +142,7 @@
       <!-- Globo del tutorial (paso 4): al lado izquierdo de esta columna -->
       @if (zonaActual() === 'frecuentes') {
         <div class="fixed left-4 right-4 bottom-4 lg:absolute lg:left-auto lg:right-full lg:bottom-auto lg:top-6 lg:mr-4 lg:w-80
-                    bg-white rounded-3xl p-6 text-center shadow-xl"
+                    bg-white rounded-3xl p-4 lg:p-6 text-center shadow-xl"
              role="dialog" aria-labelledby="titulo-tutorial">
           <div class="hidden lg:block absolute -right-2 top-10 w-4 h-4 bg-white rotate-45"></div>
           <ng-container *ngTemplateOutlet="contenidoTutorial"></ng-container>
@@ -194,28 +195,29 @@
 
 <!-- Contenido que comparten todos los pasos -->
 <ng-template #contenidoTutorial>
-  <div class="text-5xl mb-3">{{ pasosTutorial[pasoActual()].icono }}</div>
-  <h3 id="titulo-tutorial" class="text-2xl font-bold text-gray-800 mb-2">
+  <div class="text-3xl lg:text-5xl mb-1 lg:mb-3">{{ pasosTutorial[pasoActual()].icono }}</div>
+  <h3 id="titulo-tutorial" class="text-lg lg:text-2xl font-bold text-gray-800 mb-1 lg:mb-2">
     {{ pasosTutorial[pasoActual()].titulo }}
   </h3>
-  <p class="text-gray-600 text-lg mb-4">{{ pasosTutorial[pasoActual()].texto }}</p>
-
-  <p class="text-sm text-gray-400 mb-4">Paso {{ pasoActual() + 1 }} de {{ pasosTutorial.length }}</p>
+  <p class="text-gray-600 text-sm lg:text-lg mb-3 lg:mb-4">{{ pasosTutorial[pasoActual()].texto }}</p>
 
   <div class="flex gap-3 justify-center">
     @if (pasoActual() > 0) {
       <button (click)="pasoAnterior()"
-              class="px-6 py-3 rounded-full bg-gray-200 text-gray-700 font-bold hover:bg-gray-300 transition">
+              class="px-5 py-2 lg:px-6 lg:py-3 rounded-full bg-gray-200 text-gray-700 font-bold hover:bg-gray-300 transition">
         Atrás
       </button>
     }
     <button (click)="siguientePaso()"
-            class="px-6 py-3 rounded-full bg-naranja-calido text-white font-bold hover:bg-naranja-intenso transition">
+            class="px-5 py-2 lg:px-6 lg:py-3 rounded-full bg-naranja-calido text-white font-bold hover:bg-naranja-intenso transition">
       {{ pasoActual() === pasosTutorial.length - 1 ? 'Entendido' : 'Siguiente' }}
     </button>
   </div>
 
-  <button (click)="cerrarTutorial()" class="mt-4 text-sm text-gray-400 underline">Saltar</button>
+  <div class="mt-2 lg:mt-4 text-xs lg:text-sm text-gray-400">
+    Paso {{ pasoActual() + 1 }} de {{ pasosTutorial.length }} ·
+    <button (click)="cerrarTutorial()" class="underline">Saltar</button>
+  </div>
 </ng-template>
 
 <!-- Botón para volver a ver el tutorial cuando se quiera -->
