@@ -4,7 +4,7 @@
       <h1 class="text-2xl font-bold text-gray-800">Proyecto Infosoc</h1>
       
       <nav class="hidden md:flex items-center gap-6 text-gray-600 font-medium">
-        <!-- <a routerLink="/" routerLinkActive="text-naranja-calido font-bold" [routerLinkActiveOptions]="{exact: true}" class="hover:text-naranja-intenso cursor-pointer transition-colors">Inicio</a> -->
+        <a routerLink="/" routerLinkActive="text-naranja-calido font-bold" [routerLinkActiveOptions]="{exact: true}" class="hover:text-naranja-intenso cursor-pointer transition-colors">Inicio</a>
         <a routerLink="/dashboard" routerLinkActive="text-naranja-calido font-bold" class="hover:text-naranja-intenso transition-colors">Mapa</a>
         <!-- <a href="#" class="hover:text-naranja-intenso transition-colors">Mis Rutas</a> -->
         <a href="#" id="nav-mis-rutas" class="hover:text-naranja-intenso transition-colors">Mis Rutas</a>
@@ -20,7 +20,7 @@
 
   @if (menuAbierto) {
     <nav class="absolute top-full left-0 w-full mt-2 bg-white rounded-2xl shadow-lg p-4 flex flex-col gap-4 text-gray-600 font-medium z-50 md:hidden">
-      <!-- <a routerLink="/" (click)="toggleMenu()" routerLinkActive="text-naranja-calido font-bold" [routerLinkActiveOptions]="{exact: true}" class="hover:text-naranja-intenso transition-colors border-b border-gray-100 pb-2">Inicio</a> -->
+      <a routerLink="/" (click)="toggleMenu()" routerLinkActive="text-naranja-calido font-bold" [routerLinkActiveOptions]="{exact: true}" class="hover:text-naranja-intenso transition-colors border-b border-gray-100 pb-2">Inicio</a>
       <a routerLink="/dashboard" (click)="toggleMenu()" routerLinkActive="text-naranja-calido font-bold" class="hover:text-naranja-intenso transition-colors border-b border-gray-100 pb-2">Mapa</a>
       <a href="#" (click)="toggleMenu()" class="hover:text-naranja-intenso transition-colors border-b border-gray-100 pb-2">Mis Rutas</a>
       <a href="#" (click)="toggleMenu()" class="hover:text-naranja-intenso transition-colors">Ajustes</a>
