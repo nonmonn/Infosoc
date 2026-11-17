@@ -4,12 +4,15 @@ import { Router } from '@angular/router';
 
 // 1. Interfaces para ordenar la estructura del hospital
 export interface ZonaHospital {
-  idNodo: number; // El ID real de tu base de datos para la ruta
+  idNodo: number;
   nombre: string;
+  codigoRuta?: string;
 }
 
 export interface SectorHospital {
   nombreSector: string;
+  deshabilitado?: boolean;
+  imagenEdificio?: string;
   zonas: ZonaHospital[];
 }
 
@@ -23,20 +26,14 @@ export interface DestinoFrecuente {
   abierto?: boolean;
 }
 
-// Dónde se muestra cada paso del tutorial:
-// 'selector' = junto a "¿Hacia dónde deseas ir?", 'mapa' = junto a "Nuevo Mapa Interactivo",
-// 'frecuentes' = junto a "Rutas Frecuentes", 'misrutas' = junto al botón "Mis Rutas" del menú de arriba
-// (si ese botón no se ve, como en celulares, se muestra una ventana al centro)
 export type ZonaTutorial = 'selector' | 'mapa' | 'frecuentes' | 'misrutas';
 
-// Posición (en pantalla) del botón "Mis Rutas" y de su globo
 export interface RectMisRutas {
-  top: number; left: number; width: number; height: number; // el botón
-  popTop: number; popLeft: number;                           // el globo
-  flecha: number;                                            // posición de la flechita dentro del globo
+  top: number; left: number; width: number; height: number;
+  popTop: number; popLeft: number;
+  flecha: number;
 }
 
-// Paso del tutorial de primera vez
 export interface PasoTutorial {
   icono: string;
   titulo: string;
@@ -53,17 +50,28 @@ export interface PasoTutorial {
 })
 export class DashboardComponent implements OnInit {
 
-  // 2. "Mini base de datos" temporal enfocada solo en Psiquiatría
+  // Imágenes de la vista general de edificios y del edificio de Psiquiatría
+  imagenHospitalGeneral: string = '/imagenes/hospital_general.jpg';
+
+  // 2. Sectores sincronizados con las opciones de Rutas Frecuentes
   sectoresDelHospital: SectorHospital[] = [
     {
       nombreSector: 'Psiquiatría',
+      imagenEdificio: '/imagenes/edificio_psiquiatria.jpg',
       zonas: [
-        { idNodo: 1, nombre: 'Recepción Psiquiatría' },
-        { idNodo: 2, nombre: 'Box de Atención 1' },
-        { idNodo: 3, nombre: 'Box de Atención 2' },
-        { idNodo: 4, nombre: 'Sala de Terapia Grupal' },
-        { idNodo: 5, nombre: 'Baños Psiquiatría' }
+        { idNodo: 1, nombre: 'Baños - Entrada', codigoRuta: 'bano_1' },
+        { idNodo: 2, nombre: 'Baños - Pasillo', codigoRuta: 'bano_2' },
+        { idNodo: 3, nombre: 'BOX 1', codigoRuta: 'box_1' },
+        { idNodo: 4, nombre: 'BOX 2', codigoRuta: 'box_2' },
+        { idNodo: 5, nombre: 'BOX Procedimientos', codigoRuta: 'box_procedimientos' },
+        { idNodo: 6, nombre: 'Sala Espera - Recepción', codigoRuta: 'recepcion_1' },
+        { idNodo: 7, nombre: 'Entrega Recetas', codigoRuta: 'entrega_recetas' }
       ]
+    },
+    {
+      nombreSector: 'Próximamente más sectores...',
+      deshabilitado: true,
+      zonas: []
     }
   ];
 
@@ -76,15 +84,15 @@ export class DashboardComponent implements OnInit {
 
   destinosFrecuentes: DestinoFrecuente[] = [
     {
-      titulo: 'Baños', descripcion: 'Servicios higiénicos', icono: 'wc', btn: 'Ver ruta',
+      titulo: 'Baños', descripcion: 'Servicios higiénicos', icono: 'wc', btn: 'Trazar ruta acá',
       color: 'bg-naranja-calido', opciones: ['Entrada', 'Pasillo'], abierto: false
     },
     {
-      titulo: 'BOX', descripcion: 'Zona de atención', icono: 'restaurant', btn: 'Ver ruta',
+      titulo: 'BOX', descripcion: 'Zona de atención', icono: 'restaurant', btn: 'Trazar ruta acá',
       color: 'bg-amarillo-oro', opciones: ['BOX 1', 'BOX 2', 'BOX Procedimientos'], abierto: false
     },
     {
-      titulo: 'Informaciones', descripcion: 'Mesón central', icono: 'info', btn: 'Ver Ruta',
+      titulo: 'Informaciones', descripcion: 'Mesón central', icono: 'info', btn: 'Trazar ruta acá',
       color: 'bg-naranja-calido', opciones: ['Sala Espera - Recepción', 'Entrega Recetas'], abierto: false
     }
   ];
@@ -96,7 +104,6 @@ export class DashboardComponent implements OnInit {
   mostrarTutorial = signal(false);
   pasoActual = signal(0);
 
-  // Cuando tengas los pictogramas ARASAAC o capturas, reemplaza 'icono' por una imagen
   pasosTutorial: PasoTutorial[] = [
     { icono: '📍', titulo: 'Busca tu destino', texto: 'Aquí eliges a qué lugar del hospital necesitas ir hoy.', zona: 'selector' },
     { icono: '👣', titulo: 'Avanza a tu ritmo', texto: 'Sigue las fotos y los pictogramas, paso a paso.', zona: 'mapa' },
@@ -105,15 +112,12 @@ export class DashboardComponent implements OnInit {
     { icono: '⭐', titulo: 'Rutas guardadas', texto: 'En «Mis Rutas» verás las rutas que guardes para volver a usarlas.', zona: 'misrutas' }
   ];
 
-  // Zona de la pantalla que se resalta ahora (null si el tutorial está cerrado)
   zonaActual = computed<ZonaTutorial | null>(() =>
     this.mostrarTutorial() ? this.pasosTutorial[this.pasoActual()].zona : null
   );
 
-  // Posición del botón "Mis Rutas" (solo se mide durante ese paso)
   rectMisRutas = signal<RectMisRutas | null>(null);
 
-  // Lo que se resalta en el paso "Mis Rutas" (null si no es ese paso o el botón no se ve)
   spotlight = computed<RectMisRutas | null>(() =>
     this.zonaActual() === 'misrutas' ? this.rectMisRutas() : null
   );
@@ -121,14 +125,13 @@ export class DashboardComponent implements OnInit {
   constructor(private router: Router) {}
 
   ngOnInit() {
-    // localStorage solo existe en el navegador (no en el servidor SSR)
     if (isPlatformBrowser(this.platformId)) {
       try {
         if (!localStorage.getItem(this.CLAVE_TUTORIAL)) {
           this.mostrarTutorial.set(true);
         }
       } catch {
-        // Si el navegador bloquea el almacenamiento, simplemente no se muestra
+        // Ignorar si el navegador bloquea el almacenamiento
       }
     }
   }
@@ -159,39 +162,36 @@ export class DashboardComponent implements OnInit {
   }
 
   private irAPaso(n: number) {
-  this.pasoActual.set(n);
-  const zona = this.pasosTutorial[n].zona;
-  if (zona === 'misrutas') {
-    this.medirMisRutas();
-  }
-  this.desplazarAZona(zona);
-}
-
-// En celulares/tablets: lleva la pantalla hasta la zona que se está explicando
-private desplazarAZona(zona: ZonaTutorial) {
-  if (!isPlatformBrowser(this.platformId)) return;
-  if (window.innerWidth >= 1024) return; // en pantallas grandes todo se ve a la vez
-
-  if (zona === 'misrutas') {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    return;
+    this.pasoActual.set(n);
+    const zona = this.pasosTutorial[n].zona;
+    if (zona === 'misrutas') {
+      this.medirMisRutas();
+    }
+    this.desplazarAZona(zona);
   }
 
-  document.getElementById('zona-' + zona)
-    ?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-}
+  private desplazarAZona(zona: ZonaTutorial) {
+    if (!isPlatformBrowser(this.platformId)) return;
+    if (window.innerWidth >= 1024) return;
 
-  // Busca el botón "Mis Rutas" del menú y calcula dónde poner el resaltado y el globo
+    if (zona === 'misrutas') {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+
+    document.getElementById('zona-' + zona)
+      ?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
   private medirMisRutas() {
     if (!isPlatformBrowser(this.platformId)) return;
     const boton = document.getElementById('nav-mis-rutas');
     const r = boton?.getBoundingClientRect();
     if (!r || r.width === 0) {
-      // El botón está oculto (por ejemplo en celular): se usa la ventana al centro
       this.rectMisRutas.set(null);
       return;
     }
-    const anchoGlobo = 288; // igual a w-72
+    const anchoGlobo = 288;
     const centro = r.left + r.width / 2;
     const popLeft = Math.max(16, Math.min(centro - anchoGlobo / 2, window.innerWidth - anchoGlobo - 16));
     this.rectMisRutas.set({
@@ -218,9 +218,7 @@ private desplazarAZona(zona: ZonaTutorial) {
 
   alCambiarSector(event: any) {
     const nombreElegido = event.target.value;
-    // Buscamos el sector que coincide con lo que el usuario seleccionó
-    this.sectorSeleccionado = this.sectoresDelHospital.find(s => s.nombreSector === nombreElegido) || null;
-    // Reiniciamos la zona si el usuario cambia de sector a mitad de camino
+    this.sectorSeleccionado = this.sectoresDelHospital.find(s => s.nombreSector === nombreElegido && !s.deshabilitado) || null;
     this.zonaSeleccionada = null;
   }
 
@@ -231,24 +229,36 @@ private desplazarAZona(zona: ZonaTutorial) {
     }
   }
 
-  // Actualiza la variable cuando se marca el checkbox en el HTML
   toggleAccesibilidad(event: any) {
     this.necesitaAccesibilidad = event.target.checked;
   }
 
   iniciarRutaDesdeSelectores() {
     if (this.zonaSeleccionada) {
-      // Navegamos a /rutas, adjuntando el ID del destino Y la preferencia de accesibilidad
+      const mapaNodos: Record<number, string> = {
+        1: 'bano_1',
+        2: 'bano_2',
+        3: 'box_1',
+        4: 'box_2',
+        5: 'box_procedimientos',
+        6: 'recepcion_1',
+        7: 'entrega_recetas'
+      };
+
+      const codigoDestino = this.zonaSeleccionada.codigoRuta 
+        || mapaNodos[this.zonaSeleccionada.idNodo] 
+        || 'bano_1';
+
       this.router.navigate(['/rutas'], {
         queryParams: {
-          destino: this.zonaSeleccionada.idNodo,
+          destino: codigoDestino,
           accesibilidad: this.necesitaAccesibilidad
         }
       });
     }
   }
 
-  // --- LÓGICA DE LOS DESTINOS FRECUENTES (INTACTA) ---
+  // --- LÓGICA DE LOS DESTINOS FRECUENTES ---
   accionLugar(destino: DestinoFrecuente) {
     if (destino.opciones && destino.opciones.length > 0) {
       const estadoActual = destino.abierto;
@@ -265,6 +275,23 @@ private desplazarAZona(zona: ZonaTutorial) {
   }
 
   irARuta(destinoFinal: string) {
-    this.router.navigate(['/rutas']);
+    const mapaFrecuentes: Record<string, string> = {
+      'Baños Entrada': 'bano_1',
+      'Baños Pasillo': 'bano_2',
+      'BOX BOX 1': 'box_1',
+      'BOX BOX 2': 'box_2',
+      'BOX BOX Procedimientos': 'box_procedimientos',
+      'Informaciones Sala Espera - Recepción': 'recepcion_1',
+      'Informaciones Entrega Recetas': 'entrega_recetas'
+    };
+
+    const codigoDestino = mapaFrecuentes[destinoFinal] || 'bano_1';
+
+    this.router.navigate(['/rutas'], {
+      queryParams: {
+        destino: codigoDestino,
+        accesibilidad: this.necesitaAccesibilidad
+      }
+    });
   }
 }

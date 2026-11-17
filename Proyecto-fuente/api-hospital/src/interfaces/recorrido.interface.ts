@@ -1,11 +1,3 @@
-export interface AristaGrafo {
-  id: number; 
-  origenId: string; 
-  destinoId: string;
-  distancia: number; 
-  accesible: boolean;
-}
-
 export interface PasoRecorrido {
   orden: number;
   desde: string;

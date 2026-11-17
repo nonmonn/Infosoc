@@ -5,17 +5,17 @@ import { recorridoQuerySchema } from '../interfaces/recorrido.schema';
 import { getRecorrido } from '../controllers/recorridos.controller';
 
 const router = Router();
-const limiter = rateLimit({ windowMs: 60_000, limit: 60 });   // holgado: es una consulta liviana
+const limiter = rateLimit({ windowMs: 60_000, limit: 60 });
 
 /**
  * @openapi
  * /api/recorridos:
  *   get:
  *     tags: [Recorridos]
- *     summary: Calcula la ruta entre dos puntos del hospital
+ *     summary: Obtiene la ruta predefinida entre dos puntos del hospital
  *     parameters:
- *       - { in: query, name: origen,   required: true,  schema: { type: string }, example: ent }
- *       - { in: query, name: destino,  required: true,  schema: { type: string }, example: bano }
+ *       - { in: query, name: origen, required: true, schema: { type: string }, example: entrada_prin }
+ *       - { in: query, name: destino, required: true, schema: { type: string }, example: bano_1 }
  *       - { in: query, name: accesible, schema: { type: boolean, default: false }, description: Evita escaleras }
  *     responses:
  *       200: { description: Pasos con pictogramas e imágenes }
@@ -23,4 +23,5 @@ const limiter = rateLimit({ windowMs: 60_000, limit: 60 });   // holgado: es una
  *       404: { description: Origen/destino inexistente o sin ruta }
  */
 router.get('/', limiter, validateQuery(recorridoQuerySchema), getRecorrido);
+
 export default router;

@@ -1,227 +1,234 @@
-<div class="min-h-screen bg-gray-50 p-8 font-sans"
-      [class.pb-64]="mostrarTutorial()">
-  <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+<div class="max-w-7xl mx-auto py-4 px-2 sm:px-4 font-sans relative">
 
-    <!-- Selector de Destino en Cascada -->
-    <div id ="zona-selector" class ="flex flex-col gap-8 relative scroll-mt-4"
-         [class.z-110]="zonaActual() === 'selector'">
-      <div class="bg-white rounded-3xl p-6 shadow-sm flex flex-col items-center text-center transition"
-           [class.ring-4]="zonaActual() === 'selector'"
-           [class.ring-naranja-calido]="zonaActual() === 'selector'">
+  <!-- GRILLA PRINCIPAL DE 3 COLUMNAS -->
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
 
-        <div class="w-20 h-20 bg-amarillo-oro rounded-full flex items-center justify-center mb-4">
-          <span class="text-white text-4xl">📍</span>
-        </div>
-        <h2 class="text-xl font-bold mb-2">¿Hacia dónde deseas ir?</h2>
-        <p class="text-gray-500 text-sm mb-6">Selecciona el sector y luego tu zona específica.</p>
-
-        <!-- 1. Menú Desplegable de Sectores -->
-        <div class="w-full text-left mb-4">
-          <label class="block text-xs font-bold text-gray-400 mb-2 uppercase tracking-wide">1. Selecciona un Sector</label>
-          <select (change)="alCambiarSector($event)"
-                  class="block appearance-none w-full bg-gray-50 border border-gray-200 text-gray-700 py-3 px-4 rounded-xl focus:outline-none focus:bg-white focus:border-naranja-calido font-bold text-lg cursor-pointer">
-            <option value="" disabled selected>-- Elige un sector --</option>
-
-            <option *ngFor="let sector of sectoresDelHospital" [value]="sector.nombreSector">
-              🏢 {{ sector.nombreSector }}
-            </option>
-
-          </select>
-        </div>
-
-        <!-- 2. Menú Desplegable de Zonas (Solo aparece si se eligió un sector) -->
-        <div class="w-full text-left mb-6" *ngIf="sectorSeleccionado">
-          <label class="block text-xs font-bold text-gray-400 mb-2 uppercase tracking-wide">2. Selecciona la Zona</label>
-          <select (change)="alCambiarZona($event)"
-                  class="block appearance-none w-full bg-orange-50 border border-naranja-calido text-gray-700 py-3 px-4 rounded-xl focus:outline-none focus:bg-white font-bold text-lg cursor-pointer">
-            <option value="" disabled selected>-- ¿A qué lugar exacto? --</option>
-
-            <option *ngFor="let zona of sectorSeleccionado.zonas" [value]="zona.idNodo">
-              ➡️ {{ zona.nombre }}
-            </option>
-
-          </select>
-        </div>
-
-        <!-- 3. Checkbox de accesibilidad -->
-        <label class="flex items-center gap-3 mb-6 cursor-pointer text-gray-600 font-medium hover:text-orange-500 transition w-full text-left">
-          <input type="checkbox" (change)="toggleAccesibilidad($event)" class="w-5 h-5 accent-orange-500 cursor-pointer rounded">
-          <span>♿ Necesito ruta sin escaleras</span>
-        </label>
-
-        <!-- Botón para Iniciar Ruta (Se deshabilita si no han elegido zona) -->
-        <button (click)="iniciarRutaDesdeSelectores()"
-                [disabled]="!zonaSeleccionada"
-                [class]="zonaSeleccionada ? 'bg-naranja-calido text-white hover:bg-naranja-intenso shadow-md cursor-pointer' : 'bg-gray-200 text-gray-400 cursor-not-allowed'"
-                class="px-6 py-3 rounded-full font-bold w-full transition text-lg">
-          Trazar Ruta
-        </button>
-
+    <!-- 1. COLUMNA IZQUIERDA: SELECTOR DE DESTINO -->
+    <div id="zona-selector"
+         class="lg:col-span-3 bg-white rounded-3xl p-6 shadow-sm border border-gray-100 flex flex-col items-center text-center transition-all"
+         [ngClass]="zonaActual() === 'selector' ? 'ring-4 ring-orange-400 relative z-50' : ''">
+      
+      <div class="w-16 h-16 bg-amarillo-oro rounded-full flex items-center justify-center mb-4 shadow-sm">
+        <span class="text-3xl">📍</span>
       </div>
 
-      <!-- Globo del tutorial (paso 1): al lado de la tarjeta en pantallas grandes,
-           y abajo de la pantalla en celulares -->
-      @if (zonaActual() === 'selector') {
-        <div class="fixed left-4 right-4 bottom-4 lg:absolute lg:left-full lg:right-auto lg:bottom-auto lg:top-6 lg:ml-4 lg:w-80
-                    bg-white rounded-3xl p-4 lg:p-6 text-center shadow-xl"
-             role="dialog" aria-labelledby="titulo-tutorial">
-          <div class="hidden lg:block absolute -left-2 top-10 w-4 h-4 bg-white rotate-45"></div>
-          <ng-container *ngTemplateOutlet="contenidoTutorial"></ng-container>
+      <h3 class="text-lg font-bold text-gray-800 mb-1">¿Hacia dónde deseas ir?</h3>
+      <p class="text-xs text-gray-400 mb-6">Selecciona el sector y luego tu zona específica.</p>
+
+      <!-- Paso 1: Seleccionar Sector -->
+      <div class="w-full text-left mb-4">
+        <label class="block text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">
+          1. Selecciona un sector
+        </label>
+        <select 
+          (change)="alCambiarSector($event)"
+          class="w-full bg-gray-50 border border-gray-200 text-gray-800 text-sm font-semibold rounded-xl px-3.5 py-3 focus:outline-none focus:ring-2 focus:ring-orange-400 transition cursor-pointer">
+          <option value="" selected disabled>-- Selecciona un sector --</option>
+          @for (sector of sectoresDelHospital; track sector.nombreSector) {
+            <option [value]="sector.nombreSector" [disabled]="sector.deshabilitado">
+              {{ sector.deshabilitado ? '🔒 ' + sector.nombreSector : '🏢 ' + sector.nombreSector }}
+            </option>
+          }
+        </select>
+      </div>
+
+      <!-- Paso 2: Seleccionar Zona (aparece al elegir sector) -->
+      @if (sectorSeleccionado) {
+        <div class="w-full text-left mb-4 animate-fade-in">
+          <label class="block text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">
+            2. Selecciona la zona
+          </label>
+          <select 
+            (change)="alCambiarZona($event)"
+            class="w-full bg-white border-2 border-orange-300 text-gray-800 text-sm font-semibold rounded-xl px-3.5 py-3 focus:outline-none focus:ring-2 focus:ring-orange-400 transition cursor-pointer">
+            <option value="" selected disabled>-- ¿A qué lugar exacto? --</option>
+            @for (zona of sectorSeleccionado.zonas; track zona.idNodo) {
+              <option [value]="zona.idNodo">➡️ {{ zona.nombre }}</option>
+            }
+          </select>
         </div>
       }
+
+      <!-- Checkbox de Accesibilidad -->
+      <label class="flex items-center gap-2 text-xs font-semibold text-gray-600 w-full my-3 cursor-pointer select-none">
+        <input 
+          type="checkbox" 
+          [checked]="necesitaAccesibilidad"
+          (change)="toggleAccesibilidad($event)"
+          class="w-4 h-4 rounded border-gray-300 text-orange-500 focus:ring-orange-400 cursor-pointer">
+        <span>♿ Necesito ruta sin escaleras</span>
+      </label>
+
+      <!-- Botón Trazar Ruta -->
+      <button 
+        type="button"
+        [disabled]="!zonaSeleccionada"
+        (click)="iniciarRutaDesdeSelectores()"
+        class="w-full mt-2 py-3.5 px-6 rounded-full font-bold text-sm transition shadow-sm"
+        [ngClass]="zonaSeleccionada 
+          ? 'bg-naranja-calido hover:bg-orange-600 text-white cursor-pointer shadow-md' 
+          : 'bg-gray-200 text-gray-400 cursor-not-allowed'">
+        Trazar Ruta
+      </button>
     </div>
 
-    <!-- Presentación del Nuevo Mapa -->
-      <div id="zona-mapa" class="lg:col-span-2 bg-white rounded-3xl p-8 shadow-sm flex flex-col items-center justify-center text-center relative scroll-mt-4"
-         [class.z-110]="zonaActual() === 'mapa'"
-         [class.ring-4]="zonaActual() === 'mapa'"
-         [class.ring-naranja-calido]="zonaActual() === 'mapa'">
-      <div class="w-32 h-32 bg-orange-50 rounded-full flex items-center justify-center mb-6">
-        <span class="text-6xl">🗺️</span>
+    <!-- 2. COLUMNA CENTRAL: RECTÁNGULO CON TRANSICIÓN DE EDIFICIOS -->
+    <div id="zona-mapa"
+         class="lg:col-span-6 bg-white rounded-3xl p-6 sm:p-8 shadow-sm border border-gray-100 flex flex-col items-center justify-between transition-all"
+         [ngClass]="zonaActual() === 'mapa' ? 'ring-4 ring-orange-400 relative z-50' : ''">
+      
+      <!-- Cabecera dinámica -->
+      <div class="w-full flex justify-between items-center mb-4">
+        <div>
+          <span class="text-xs font-bold uppercase tracking-wider text-orange-600 bg-orange-50 px-3 py-1 rounded-full border border-orange-100">
+            {{ sectorSeleccionado ? 'Sector Seleccionado' : 'Nuevo Mapa Interactivo' }}
+          </span>
+          <h2 class="text-2xl font-bold text-gray-800 mt-2">
+            {{ sectorSeleccionado ? 'Edificio de ' + sectorSeleccionado.nombreSector : 'Vista General del Hospital' }}
+          </h2>
+        </div>
+        <div class="w-12 h-12 bg-orange-50 rounded-full flex items-center justify-center text-2xl">
+          {{ sectorSeleccionado ? '🏢' : '🗺️' }}
+        </div>
       </div>
-      <h2 class="text-3xl font-bold mb-4 text-gray-700">Nuevo Mapa Interactivo</h2>
-      <p class="text-gray-500 mb-8 max-w-md text-lg">
-        Nuestro sistema ahora calcula automáticamente la ruta más corta y te ofrece opciones sin escaleras para tu comodidad.
+
+      <!-- Contenedor de imagen con transición suave (Crossfade + Zoom) -->
+      <div class="relative w-full h-64 sm:h-80 rounded-2xl overflow-hidden bg-gray-100 mb-5 shadow-inner">
+        
+        <!-- Imagen 1: Todos los edificios del hospital (cuando NO se ha elegido sector) -->
+        <img 
+          [src]="imagenHospitalGeneral" 
+          alt="Vista general de todos los edificios del hospital"
+          class="absolute inset-0 w-full h-full object-cover transition-all duration-700 ease-in-out"
+          [ngClass]="sectorSeleccionado ? 'opacity-0 scale-110 pointer-events-none' : 'opacity-100 scale-100'">
+
+        <!-- Imagen 2: Solo el edificio del sector seleccionado (Psiquiatría) -->
+        <img 
+          [src]="sectorSeleccionado?.imagenEdificio || imagenHospitalGeneral" 
+          [alt]="'Edificio de ' + (sectorSeleccionado?.nombreSector || 'Hospital')"
+          class="absolute inset-0 w-full h-full object-cover transition-all duration-700 ease-in-out"
+          [ngClass]="sectorSeleccionado ? 'opacity-100 scale-100' : 'opacity-0 scale-95 pointer-events-none'">
+
+        <!-- Cinta informativa sobre la foto -->
+        <div class="absolute bottom-3 left-3 right-3 bg-black/55 backdrop-blur-sm text-white px-4 py-2 rounded-xl text-xs sm:text-sm font-medium">
+          {{ sectorSeleccionado 
+            ? '📍 Mostrando el edificio de ' + sectorSeleccionado.nombreSector + '. Elige la zona exacta a la izquierda.' 
+            : '👈 Selecciona un sector en el menú izquierdo para enfocar su edificio.' }}
+        </div>
+      </div>
+
+      <p class="text-sm text-gray-500 text-center max-w-md mb-6">
+        {{ sectorSeleccionado 
+          ? 'Ya enfocamos el sector de ' + sectorSeleccionado.nombreSector + '. Selecciona a qué lugar exacto necesitas ir para ver los pasos.'
+          : 'Nuestro sistema ahora calcula automáticamente la ruta más corta y te ofrece opciones sin escaleras para tu comodidad.' }}
       </p>
 
-      <button routerLink="/rutas" class="bg-amarillo-oro text-white px-8 py-4 rounded-full font-bold hover:bg-amarillo-sol transition text-lg shadow-md w-full max-w-sm">
-        Iniciar Recorrido Virtual
+      <button 
+        type="button"
+        (click)="zonaSeleccionada ? iniciarRutaDesdeSelectores() : irARuta('Baños Entrada')"
+        class="bg-amarillo-oro hover:bg-orange-500 text-white font-bold py-3.5 px-10 rounded-full shadow-md transition text-sm sm:text-base cursor-pointer">
+        {{ zonaSeleccionada ? 'Iniciar Recorrido a ' + zonaSeleccionada.nombre : 'Iniciar Recorrido Virtual' }}
       </button>
+    </div>
 
-      <!-- Globo del tutorial (pasos 2 y 3): al lado derecho de esta tarjeta -->
-      @if (zonaActual() === 'mapa') {
-        <div class="fixed left-4 right-4 bottom-4 lg:absolute lg:left-full lg:right-auto lg:bottom-auto lg:top-6 lg:ml-4 lg:w-64 xl:w-72
-                    bg-white rounded-3xl p-4 lg:p-5 text-center shadow-xl"
-             role="dialog" aria-labelledby="titulo-tutorial">
-          <div class="hidden lg:block absolute -left-2 top-10 w-4 h-4 bg-white rotate-45"></div>
-          <ng-container *ngTemplateOutlet="contenidoTutorial"></ng-container>
+    <!-- 3. COLUMNA DERECHA: RUTAS FRECUENTES -->
+    <div id="zona-frecuentes"
+         class="lg:col-span-3 flex flex-col gap-4 transition-all"
+         [ngClass]="zonaActual() === 'frecuentes' ? 'ring-4 ring-orange-400 rounded-3xl p-2 relative z-50 bg-white/60' : ''">
+      
+      <h3 class="text-sm font-bold text-gray-700 px-1">Rutas Frecuentes</h3>
+
+      @for (item of destinosFrecuentes; track item.titulo) {
+        <div class="bg-white rounded-3xl p-4 shadow-sm border border-gray-100 flex flex-col transition">
+          <div class="flex items-center gap-4">
+            <div class="w-12 h-12 rounded-full flex items-center justify-center text-white shrink-0 shadow-sm"
+                 [ngClass]="item.color">
+              <span class="text-xl">📍</span>
+            </div>
+
+            <div class="flex flex-col items-start grow">
+              <h4 class="font-bold text-gray-800 text-base leading-tight">{{ item.titulo }}</h4>
+              <span class="text-xs text-gray-400 mb-2">{{ item.descripcion }}</span>
+              
+              <button 
+                type="button"
+                (click)="accionLugar(item)"
+                class="text-white text-xs font-bold px-4 py-1.5 rounded-full shadow-sm transition cursor-pointer hover:opacity-90"
+                [ngClass]="item.color">
+                {{ item.btn }}
+              </button>
+            </div>
+          </div>
+
+          <!-- Sub-opciones desplegables (Entrada / Pasillo, BOX 1 / BOX 2, etc.) -->
+          @if (item.abierto && item.opciones) {
+            <div class="mt-3 pt-3 border-t border-gray-100 flex flex-wrap gap-2">
+              @for (op of item.opciones; track op) {
+                <button 
+                  type="button"
+                  (click)="seleccionarPiso(item.titulo, op)"
+                  class="bg-orange-50 hover:bg-orange-500 hover:text-white text-orange-700 text-xs font-bold px-3 py-1.5 rounded-xl border border-orange-200 transition cursor-pointer">
+                  {{ op }}
+                </button>
+              }
+            </div>
+          }
         </div>
       }
     </div>
 
-    <!-- Destinos Frecuentes -->
-    <div id="zona-frecuentes" class="flex flex-col gap-6 relative rounded-3xl scroll-mt-4"
-         [class.z-110]="zonaActual() === 'frecuentes'"
-         [class.ring-4]="zonaActual() === 'frecuentes'"
-         [class.ring-naranja-calido]="zonaActual() === 'frecuentes'">
-      <h3 class="font-bold text-gray-700 ml-2">Rutas Frecuentes</h3>
+  </div>
 
-      <div *ngFor="let destino of destinosFrecuentes"
-           (click)="accionLugar(destino)"
-           class="bg-white rounded-3xl p-6 shadow-sm flex flex-col hover:shadow-md transition cursor-pointer">
+  <!-- BOTÓN FLOTANTE VER TUTORIAL -->
+  <button 
+    type="button"
+    (click)="verTutorial()"
+    class="fixed bottom-6 right-6 bg-white hover:bg-orange-50 text-gray-700 font-bold text-xs px-4 py-2.5 rounded-full shadow-lg border border-gray-200 flex items-center gap-1.5 transition cursor-pointer z-40">
+    <span class="text-pink-500 font-extrabold">?</span> Ver tutorial
+  </button>
 
-        <div class="flex items-center gap-4">
-          <div [class]="destino.color + ' w-16 h-16 rounded-full shrink-0 flex items-center justify-center text-white text-2xl'">
-            📍
-          </div>
-          <div>
-            <h3 class="font-bold text-lg">{{ destino.titulo }}</h3>
-            <p class="text-gray-500 text-xs mb-2">{{ destino.descripcion }}</p>
-
-            <button routerLink="/rutas" [class]="destino.color + ' text-white px-4 py-1 rounded-full text-xs font-bold hover:opacity-80 transition inline-flex items-center gap-1'">
-              <span>Trazar ruta acá</span>
+  <!-- MODAL / GLOBO DEL TUTORIAL -->
+  @if (mostrarTutorial()) {
+    <div class="fixed inset-0 bg-black/40 backdrop-blur-[1px] z-40 flex items-center justify-center p-4">
+      <div class="bg-white rounded-3xl p-6 max-w-sm w-full shadow-2xl border border-orange-100 z-50 text-center flex flex-col items-center">
+        <div class="w-14 h-14 bg-orange-100 rounded-full flex items-center justify-center text-2xl mb-3">
+          {{ pasosTutorial[pasoActual()].icono }}
+        </div>
+        <span class="text-[11px] font-bold uppercase tracking-wider text-orange-500 mb-1">
+          Paso {{ pasoActual() + 1 }} de {{ pasosTutorial.length }}
+        </span>
+        <h4 class="text-lg font-bold text-gray-800 mb-2">
+          {{ pasosTutorial[pasoActual()].titulo }}
+        </h4>
+        <p class="text-sm text-gray-500 mb-6">
+          {{ pasosTutorial[pasoActual()].texto }}
+        </p>
+        <div class="flex items-center justify-between w-full gap-2">
+          <button 
+            type="button"
+            (click)="cerrarTutorial()"
+            class="text-xs font-semibold text-gray-400 hover:text-gray-600 px-3 py-2 cursor-pointer">
+            Saltar
+          </button>
+          <div class="flex gap-2">
+            @if (pasoActual() > 0) {
+              <button 
+                type="button"
+                (click)="pasoAnterior()"
+                class="bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs font-bold px-4 py-2.5 rounded-full cursor-pointer">
+                Anterior
+              </button>
+            }
+            <button 
+              type="button"
+              (click)="siguientePaso()"
+              class="bg-naranja-calido hover:bg-orange-600 text-white text-xs font-bold px-5 py-2.5 rounded-full shadow-sm cursor-pointer">
+              {{ pasoActual() < pasosTutorial.length - 1 ? 'Siguiente' : '¡Entendido!' }}
             </button>
           </div>
         </div>
-
-        <!-- Mini menú desplegable de pisos -->
-        <div *ngIf="destino.abierto"
-             (click)="$event.stopPropagation()"
-             class="mt-4 pt-3 border-t border-gray-100 flex flex-col gap-2">
-          <p class="text-xs font-semibold text-gray-400 px-1">Selecciona el piso:</p>
-          <button *ngFor="let piso of destino.opciones"
-                  (click)="seleccionarPiso(destino.titulo, piso)"
-                  class="w-full text-left px-3 py-2 rounded-xl text-xs font-bold text-gray-700 bg-gray-50 hover:bg-orange-50 hover:text-naranja-calido transition flex justify-between items-center">
-            <span>{{ piso }}</span>
-            <span>➡️</span>
-          </button>
-        </div>
-
       </div>
-
-      <!-- Globo del tutorial (paso 4): al lado izquierdo de esta columna -->
-      @if (zonaActual() === 'frecuentes') {
-        <div class="fixed left-4 right-4 bottom-4 lg:absolute lg:left-auto lg:right-full lg:bottom-auto lg:top-6 lg:mr-4 lg:w-80
-                    bg-white rounded-3xl p-4 lg:p-6 text-center shadow-xl"
-             role="dialog" aria-labelledby="titulo-tutorial">
-          <div class="hidden lg:block absolute -right-2 top-10 w-4 h-4 bg-white rotate-45"></div>
-          <ng-container *ngTemplateOutlet="contenidoTutorial"></ng-container>
-        </div>
-      }
     </div>
+  }
 
-  </div>
 </div>
-
-<!-- ================= TUTORIAL DE PRIMERA VEZ ================= -->
-
-<!-- Fondo oscuro (en el paso "Mis Rutas" lo reemplaza el resaltado de más abajo) -->
-@if (mostrarTutorial() && !spotlight()) {
-  <div class="fixed inset-0 z-100 bg-black/50"></div>
-}
-
-<!-- Paso "Mis Rutas": oscurece todo menos el botón del menú, y pone el globo debajo de él -->
-@if (spotlight(); as r) {
-  <!-- capa invisible para que no se pueda tocar lo de atrás -->
-  <div class="fixed inset-0 z-100"></div>
-
-  <!-- el "hueco" iluminado alrededor del botón -->
-  <div class="fixed z-100 rounded-xl pointer-events-none"
-       [style.top.px]="r.top - 8"
-       [style.left.px]="r.left - 12"
-       [style.width.px]="r.width + 24"
-       [style.height.px]="r.height + 16"
-       style="box-shadow: 0 0 0 4px var(--color-naranja-calido, #f97316), 0 0 0 9999px rgba(0, 0, 0, 0.5);"></div>
-
-  <!-- globo -->
-  <div class="fixed z-110 w-72 bg-white rounded-3xl p-5 text-center shadow-xl"
-       [style.top.px]="r.popTop"
-       [style.left.px]="r.popLeft"
-       role="dialog" aria-labelledby="titulo-tutorial">
-    <div class="absolute -top-2 w-4 h-4 bg-white rotate-45" [style.left.px]="r.flecha"></div>
-    <ng-container *ngTemplateOutlet="contenidoTutorial"></ng-container>
-  </div>
-}
-
-<!-- Paso "Mis Rutas" cuando el botón no se ve (celulares): ventana centrada -->
-@if (zonaActual() === 'misrutas' && !spotlight()) {
-  <div class="fixed inset-0 z-110 flex items-center justify-center p-4"
-       role="dialog" aria-modal="true" aria-labelledby="titulo-tutorial">
-    <div class="bg-white rounded-3xl p-8 max-w-md w-full text-center shadow-xl">
-      <ng-container *ngTemplateOutlet="contenidoTutorial"></ng-container>
-    </div>
-  </div>
-}
-
-<!-- Contenido que comparten todos los pasos -->
-<ng-template #contenidoTutorial>
-  <div class="text-3xl lg:text-5xl mb-1 lg:mb-3">{{ pasosTutorial[pasoActual()].icono }}</div>
-  <h3 id="titulo-tutorial" class="text-lg lg:text-2xl font-bold text-gray-800 mb-1 lg:mb-2">
-    {{ pasosTutorial[pasoActual()].titulo }}
-  </h3>
-  <p class="text-gray-600 text-sm lg:text-lg mb-3 lg:mb-4">{{ pasosTutorial[pasoActual()].texto }}</p>
-
-  <div class="flex gap-3 justify-center">
-    @if (pasoActual() > 0) {
-      <button (click)="pasoAnterior()"
-              class="px-5 py-2 lg:px-6 lg:py-3 rounded-full bg-gray-200 text-gray-700 font-bold hover:bg-gray-300 transition">
-        Atrás
-      </button>
-    }
-    <button (click)="siguientePaso()"
-            class="px-5 py-2 lg:px-6 lg:py-3 rounded-full bg-naranja-calido text-white font-bold hover:bg-naranja-intenso transition">
-      {{ pasoActual() === pasosTutorial.length - 1 ? 'Entendido' : 'Siguiente' }}
-    </button>
-  </div>
-
-  <div class="mt-2 lg:mt-4 text-xs lg:text-sm text-gray-400">
-    Paso {{ pasoActual() + 1 }} de {{ pasosTutorial.length }} ·
-    <button (click)="cerrarTutorial()" class="underline">Saltar</button>
-  </div>
-</ng-template>
-
-<!-- Botón para volver a ver el tutorial cuando se quiera -->
-<button (click)="verTutorial()"
-        class="fixed bottom-4 right-4 z-40 bg-white shadow-md rounded-full px-4 py-2 font-bold text-gray-600 hover:text-naranja-intenso transition">
-  ❓ Ver tutorial
-</button>
