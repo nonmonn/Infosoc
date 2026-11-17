@@ -19,8 +19,8 @@ export const RUTAS_HARDCODEADAS: Record<string, RecorridoRespuesta> = {
         },
         texto: 'Ingresa por las puertas de vidrio de la entrada principal.',
         imagenes: [
-          { url: '/imagenes/recorridos/bano1/frame1_entrada_01.webp', alt: 'Vista frente a las puertas de vidrio de la entrada' },
-          { url: '/imagenes/recorridos/bano1/frame1_entrada_02.webp', alt: 'Transición cruzando las puertas de entrada' }
+          { url: '/imagenes/recorridos/bano1/frame1_entrada_01.jpg', alt: 'Vista frente a las puertas de vidrio de la entrada' },
+          { url: '/imagenes/recorridos/bano1/frame1_entrada_02.jpg', alt: 'Transición cruzando las puertas de entrada' }
         ],
       },
       {
@@ -34,8 +34,8 @@ export const RUTAS_HARDCODEADAS: Record<string, RecorridoRespuesta> = {
         },
         texto: 'Avanza unos pasos por el pasillo junto a la sala de espera.',
         imagenes: [
-          { url: '/imagenes/recorridos/bano1/frame2_pasillo_01.webp', alt: 'Vista del pasillo principal al costado de la entrada' },
-          { url: '/imagenes/recorridos/bano1/frame2_pasillo_02.webp', alt: 'Transición acercándose al sector del baño' }
+          { url: '/imagenes/recorridos/bano1/frame2_pasillo_01.jpg', alt: 'Vista del pasillo principal al costado de la entrada' },
+          { url: '/imagenes/recorridos/bano1/frame2_pasillo_02.jpg', alt: 'Transición acercándose al sector del baño' }
         ],
       },
       {
@@ -49,9 +49,9 @@ export const RUTAS_HARDCODEADAS: Record<string, RecorridoRespuesta> = {
         },
         texto: 'A tu costado encontrarás la puerta del Baño 1. Has llegado a tu destino.',
         imagenes: [
-          { url: '/imagenes/recorridos/bano1/frame3_bano_cerrado.webp', alt: 'Vista frontal de la puerta del baño cerrada' },
-          { url: '/imagenes/recorridos/bano1/frame3_bano_abierto.webp', alt: 'Transición con la puerta del baño abierta' },
-          { url: '/imagenes/recorridos/bano1/frame3_bano_interior.webp', alt: 'Vista interior del baño' }
+          { url: '/imagenes/recorridos/bano1/frame3_bano_cerrado.jpg', alt: 'Vista frontal de la puerta del baño cerrada' },
+          { url: '/imagenes/recorridos/bano1/frame3_bano_abierto.jpg', alt: 'Transición con la puerta del baño abierta' },
+          { url: '/imagenes/recorridos/bano1/frame3_bano_interior.jpg', alt: 'Vista interior del baño' }
         ],
       },
     ],
