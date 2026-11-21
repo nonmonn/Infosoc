@@ -109,13 +109,6 @@
           [alt]="'Edificio de ' + (sectorSeleccionado?.nombreSector || 'Hospital')"
           class="absolute inset-0 w-full h-full object-cover transition-all duration-700 ease-in-out"
           [ngClass]="sectorSeleccionado ? 'opacity-100 scale-100' : 'opacity-0 scale-95 pointer-events-none'">
-
-        <!-- Cinta informativa sobre la foto -->
-        <div class="absolute bottom-3 left-3 right-3 bg-black/55 backdrop-blur-sm text-white px-4 py-2 rounded-xl text-xs sm:text-sm font-medium">
-          {{ sectorSeleccionado 
-            ? '📍 Mostrando el edificio de ' + sectorSeleccionado.nombreSector + '. Elige la zona exacta a la izquierda.' 
-            : '👈 Selecciona un sector en el menú izquierdo para enfocar su edificio.' }}
-        </div>
       </div>
 
       <p class="text-sm text-gray-500 text-center max-w-md mb-6">
