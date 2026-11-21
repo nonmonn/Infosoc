@@ -2,6 +2,7 @@ import { Component, OnInit, ChangeDetectorRef, PLATFORM_ID, inject } from '@angu
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router'; 
 import { ApiRutasService } from '../../core/api-rutas.service';
+import { RutasGuardadasService } from '../../core/rutas-guardadas.service'; // NUEVO
 
 @Component({
   selector: 'app-rutas',
@@ -20,8 +21,11 @@ export class RutasComponent implements OnInit {
   destinoValor: string = 'bano_1';
   requiereAccesibilidad: boolean = false;
 
+  guardada = false; // NUEVO
+
   private platformId = inject(PLATFORM_ID);
   private cdr = inject(ChangeDetectorRef);
+  private rutasGuardadas = inject(RutasGuardadasService); // NUEVO
 
   constructor(
     private apiRutas: ApiRutasService,
@@ -33,12 +37,26 @@ export class RutasComponent implements OnInit {
     return this.instruccionesRuta[this.pasoActualIndex] || null;
   }
 
+  // NUEVO: identificador único de la ruta actual
+  get idRutaActual(): string {
+    return `${this.origenValor}|${this.destinoValor}|${this.requiereAccesibilidad}`;
+  }
+
   ngOnInit() {
     if (!isPlatformBrowser(this.platformId)) {
       return;
     }
 
     this.route.queryParams.subscribe(params => {
+      // NUEVO: si viene desde "Mis rutas", carga la ruta desde el caché
+      if (params['guardada']) {
+        const ruta = this.rutasGuardadas.obtener(String(params['guardada']));
+        if (ruta) {
+          this.cargarDesdeCache(ruta);
+          return;
+        }
+      }
+
       if (params['destino']) {
         const destParam = String(params['destino']);
         this.destinoValor = (destParam === '1' || destParam === '5' || destParam === 'bano') 
@@ -58,6 +76,7 @@ export class RutasComponent implements OnInit {
     this.errorMensaje = '';
     this.instruccionesRuta = [];
     this.pasoActualIndex = 0;
+    this.guardada = false; // NUEVO
     this.cdr.detectChanges();
 
     const tiempoMinimoCarga = 1200; // 1.2 segundos para que se aprecie la mini pantalla de carga
@@ -82,6 +101,8 @@ export class RutasComponent implements OnInit {
               fotoActualIndex: 0,
               pictograma: p.pictograma ?? null
             }));
+            // NUEVO: revisa si esta ruta ya estaba guardada
+            this.guardada = this.rutasGuardadas.estaGuardada(this.idRutaActual);
           } else {
             this.errorMensaje = 'No se encontró una ruta válida para este destino.';
           }
@@ -96,6 +117,46 @@ export class RutasComponent implements OnInit {
         this.cdr.detectChanges();
       }
     });
+  }
+
+  // NUEVO: "bano_1" -> "Bano 1"
+  private formatear(id: string): string {
+    const texto = id.replace(/_/g, ' ');
+    return texto.charAt(0).toUpperCase() + texto.slice(1);
+  }
+
+  // NUEVO: muestra una ruta guardada sin llamar al backend
+  private cargarDesdeCache(ruta: any) {
+    this.origenValor = ruta.origen;
+    this.destinoValor = ruta.destino;
+    this.requiereAccesibilidad = ruta.accesibilidad;
+    this.instruccionesRuta = ruta.pasos.map((p: any) => ({ ...p, fotoActualIndex: 0 }));
+    this.pasoActualIndex = 0;
+    this.errorMensaje = '';
+    this.cargando = false;
+    this.guardada = true;
+    this.cdr.detectChanges();
+  }
+
+  // NUEVO: guardar o quitar la ruta de "Mis rutas"
+  alternarGuardado() {
+    if (this.instruccionesRuta.length === 0) return;
+
+    if (this.guardada) {
+      this.rutasGuardadas.eliminar(this.idRutaActual);
+      this.guardada = false;
+    } else {
+      this.rutasGuardadas.guardar({
+        id: this.idRutaActual,
+        nombre: `${this.formatear(this.origenValor)} → ${this.formatear(this.destinoValor)}`,
+        origen: this.origenValor,
+        destino: this.destinoValor,
+        accesibilidad: this.requiereAccesibilidad,
+        pasos: this.instruccionesRuta
+      });
+      this.guardada = true;
+    }
+    this.cdr.detectChanges();
   }
 
   cambiarFotoPaso(paso: any, indiceFoto: number) {

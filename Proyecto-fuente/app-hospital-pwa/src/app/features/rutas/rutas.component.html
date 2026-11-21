@@ -45,7 +45,7 @@
       </div>
 
       <!-- Contenedor panorámico de la foto principal -->
-      <div class="w-full h-64 sm:h-[380px] flex items-center justify-center mb-5 rounded-3xl overflow-hidden bg-gray-100">
+      <div class="w-full h-64 sm:h-95 flex items-center justify-center mb-5 rounded-3xl overflow-hidden bg-gray-100">
         <img 
           [src]="pasoActual.imagenUrl" 
           [alt]="pasoActual.instruccion" 
@@ -90,6 +90,20 @@
           (click)="siguientePaso()"
           class="bg-orange-500 hover:bg-orange-600 text-white font-bold py-3.5 px-12 rounded-full shadow-md transition text-lg cursor-pointer">
           {{ pasoActualIndex < instruccionesRuta.length - 1 ? 'Siguiente Paso' : 'Finalizar Ruta' }}
+        </button>
+      </div>
+
+      <!-- NUEVO: Botón guardar ruta -->
+      <div class="flex justify-center w-full mt-5">
+        <button
+          type="button"
+          (click)="alternarGuardado()"
+          class="flex items-center gap-2 font-bold py-2.5 px-8 rounded-full border-2 transition cursor-pointer text-sm sm:text-base"
+          [ngClass]="guardada
+            ? 'bg-orange-50 border-orange-300 text-orange-600 hover:bg-orange-100'
+            : 'bg-white border-gray-200 text-gray-600 hover:bg-gray-50'">
+          <span>{{ guardada ? '✓' : '💾' }}</span>
+          <span>{{ guardada ? 'Ruta guardada' : 'Guardar ruta' }}</span>
         </button>
       </div>
 
