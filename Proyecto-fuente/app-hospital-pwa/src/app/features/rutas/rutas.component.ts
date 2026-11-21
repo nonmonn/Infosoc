@@ -2,7 +2,7 @@ import { Component, OnInit, ChangeDetectorRef, PLATFORM_ID, inject } from '@angu
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router'; 
 import { ApiRutasService } from '../../core/api-rutas.service';
-import { RutasGuardadasService } from '../../core/rutas-guardadas.service'; // NUEVO
+import { RutasGuardadasService } from '../../core/rutas-guardadas.service';
 
 @Component({
   selector: 'app-rutas',
@@ -14,6 +14,7 @@ import { RutasGuardadasService } from '../../core/rutas-guardadas.service'; // N
 export class RutasComponent implements OnInit {
   instruccionesRuta: any[] = [];
   pasoActualIndex: number = 0;
+  marcadorActivoId: string | null = null; // Controla qué globo flotante está abierto
   cargando = false;
   errorMensaje = '';
 
@@ -21,11 +22,11 @@ export class RutasComponent implements OnInit {
   destinoValor: string = 'bano_1';
   requiereAccesibilidad: boolean = false;
 
-  guardada = false; // NUEVO
+  guardada = false;
 
   private platformId = inject(PLATFORM_ID);
   private cdr = inject(ChangeDetectorRef);
-  private rutasGuardadas = inject(RutasGuardadasService); // NUEVO
+  private rutasGuardadas = inject(RutasGuardadasService);
 
   constructor(
     private apiRutas: ApiRutasService,
@@ -37,9 +38,16 @@ export class RutasComponent implements OnInit {
     return this.instruccionesRuta[this.pasoActualIndex] || null;
   }
 
-  // NUEVO: identificador único de la ruta actual
+  // Identificador único de la ruta actual
   get idRutaActual(): string {
     return `${this.origenValor}|${this.destinoValor}|${this.requiereAccesibilidad}`;
+  }
+
+  // Devuelve los marcadores flotantes de la vista (foto) seleccionada actualmente
+  get marcadoresActuales(): any[] {
+    if (!this.pasoActual || !this.pasoActual.imagenes) return [];
+    const fotoActiva = this.pasoActual.imagenes[this.pasoActual.fotoActualIndex];
+    return fotoActiva?.marcadores || [];
   }
 
   ngOnInit() {
@@ -48,7 +56,7 @@ export class RutasComponent implements OnInit {
     }
 
     this.route.queryParams.subscribe(params => {
-      // NUEVO: si viene desde "Mis rutas", carga la ruta desde el caché
+      // Si viene desde "Mis rutas", carga la ruta desde el caché
       if (params['guardada']) {
         const ruta = this.rutasGuardadas.obtener(String(params['guardada']));
         if (ruta) {
@@ -76,7 +84,8 @@ export class RutasComponent implements OnInit {
     this.errorMensaje = '';
     this.instruccionesRuta = [];
     this.pasoActualIndex = 0;
-    this.guardada = false; // NUEVO
+    this.marcadorActivoId = null;
+    this.guardada = false;
     this.cdr.detectChanges();
 
     const tiempoMinimoCarga = 1200; // 1.2 segundos para que se aprecie la mini pantalla de carga
@@ -97,11 +106,11 @@ export class RutasComponent implements OnInit {
               hasta: p.hasta,
               instruccion: p.instruccion ?? p.texto,
               imagenUrl: p.imagenUrl ?? p.imagenes?.[0]?.url ?? '/imagenes/imagen 1.jpg',
-              imagenes: p.imagenes ?? [{ url: p.imagenUrl, alt: p.instruccion }],
+              imagenes: p.imagenes ?? [{ url: p.imagenUrl, alt: p.instruccion, marcadores: [] }],
               fotoActualIndex: 0,
               pictograma: p.pictograma ?? null
             }));
-            // NUEVO: revisa si esta ruta ya estaba guardada
+            // Revisa si esta ruta ya estaba guardada
             this.guardada = this.rutasGuardadas.estaGuardada(this.idRutaActual);
           } else {
             this.errorMensaje = 'No se encontró una ruta válida para este destino.';
@@ -119,26 +128,27 @@ export class RutasComponent implements OnInit {
     });
   }
 
-  // NUEVO: "bano_1" -> "Bano 1"
+  // "bano_1" -> "Bano 1"
   private formatear(id: string): string {
     const texto = id.replace(/_/g, ' ');
     return texto.charAt(0).toUpperCase() + texto.slice(1);
   }
 
-  // NUEVO: muestra una ruta guardada sin llamar al backend
+  // Muestra una ruta guardada sin llamar al backend
   private cargarDesdeCache(ruta: any) {
     this.origenValor = ruta.origen;
     this.destinoValor = ruta.destino;
     this.requiereAccesibilidad = ruta.accesibilidad;
     this.instruccionesRuta = ruta.pasos.map((p: any) => ({ ...p, fotoActualIndex: 0 }));
     this.pasoActualIndex = 0;
+    this.marcadorActivoId = null;
     this.errorMensaje = '';
     this.cargando = false;
     this.guardada = true;
     this.cdr.detectChanges();
   }
 
-  // NUEVO: guardar o quitar la ruta de "Mis rutas"
+  // Guardar o quitar la ruta de "Mis rutas"
   alternarGuardado() {
     if (this.instruccionesRuta.length === 0) return;
 
@@ -162,10 +172,26 @@ export class RutasComponent implements OnInit {
   cambiarFotoPaso(paso: any, indiceFoto: number) {
     paso.fotoActualIndex = indiceFoto;
     paso.imagenUrl = paso.imagenes[indiceFoto].url;
+    this.marcadorActivoId = null; // Cierra cualquier globo al cambiar de vista
     this.cdr.detectChanges();
   }
 
+  // Abre o cierra el globo explicativo al tocar el círculo naranja
+  toggleMarcador(id: string, event: Event) {
+    event.stopPropagation();
+    this.marcadorActivoId = this.marcadorActivoId === id ? null : id;
+    this.cdr.detectChanges();
+  }
+
+  cerrarMarcadores() {
+    if (this.marcadorActivoId) {
+      this.marcadorActivoId = null;
+      this.cdr.detectChanges();
+    }
+  }
+
   siguientePaso() {
+    this.marcadorActivoId = null;
     if (this.pasoActualIndex < this.instruccionesRuta.length - 1) {
       this.pasoActualIndex++;
       this.cdr.detectChanges();
@@ -175,6 +201,7 @@ export class RutasComponent implements OnInit {
   }
 
   pasoAnterior() {
+    this.marcadorActivoId = null;
     if (this.pasoActualIndex > 0) {
       this.pasoActualIndex--;
       this.cdr.detectChanges();

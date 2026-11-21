@@ -1,4 +1,4 @@
-<div class="min-h-[82vh] bg-gray-50 px-4 py-2 sm:px-8 font-sans flex flex-col items-center justify-center">
+<div class="min-h-[82vh] bg-gray-50 px-4 py-2 sm:px-8 font-sans flex flex-col items-center justify-center" (click)="cerrarMarcadores()">
 
   <!-- 1. MINI PANTALLA DE CARGA (Se muestra durante 1.2s al iniciar) -->
   @if (cargando) {
@@ -32,7 +32,7 @@
     </div>
   }
 
-  <!-- 3. RECTÁNGULO CENTRAL GRANDE (Ancho del recuadro rojo: max-w-6xl) -->
+  <!-- 3. RECTÁNGULO CENTRAL GRANDE CON OVERLAY DE PICTOGRAMAS -->
   @if (!cargando && pasoActual) {
     <div class="bg-white rounded-[2.5rem] p-6 sm:px-12 sm:py-8 border-8 border-gray-100 flex flex-col items-center justify-between shadow-xl w-full max-w-6xl animate-fade-in">
       
@@ -44,12 +44,62 @@
         <span class="text-sm sm:text-base text-gray-400 font-semibold">{{ pasoActual.hasta }}</span>
       </div>
 
-      <!-- Contenedor panorámico de la foto principal -->
-      <div class="w-full h-64 sm:h-95 flex items-center justify-center mb-5 rounded-3xl overflow-hidden bg-gray-100">
+      <!-- Contenedor panorámico de la foto principal + Puntos flotantes -->
+      <div class="relative w-full h-64 sm:h-95 flex items-center justify-center mb-5 rounded-3xl overflow-visible bg-gray-100 select-none">
         <img 
           [src]="pasoActual.imagenUrl" 
           [alt]="pasoActual.instruccion" 
-          class="w-full h-full object-cover transition-all duration-300">
+          class="w-full h-full object-cover rounded-3xl transition-all duration-300">
+
+        <!-- OVERLAY: Círculos flotantes interactivos -->
+        @for (marcador of marcadoresActuales; track marcador.id) {
+          <div 
+            class="absolute -translate-x-1/2 -translate-y-1/2 z-20"
+            [style.top.%]="marcador.top"
+            [style.left.%]="marcador.left">
+
+            <!-- Círculo naranja flotante -->
+            <button
+              type="button"
+              (click)="toggleMarcador(marcador.id, $event)"
+              [attr.aria-label]="marcador.titulo"
+              class="relative w-14 h-14 sm:w-16 sm:h-16 bg-orange-500 hover:bg-orange-600 text-white rounded-full shadow-lg border-4 border-white flex items-center justify-center transition-transform duration-200 hover:scale-110 cursor-pointer">
+              
+              <!-- Anillo de pulso suave cuando está cerrado -->
+              @if (marcadorActivoId !== marcador.id) {
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-40"></span>
+              }
+
+              <!-- Pictograma SVG/PNG si existe, o emoji como respaldo -->
+              @if (marcador.imagenUrl) {
+                <img [src]="marcador.imagenUrl" [alt]="marcador.titulo" class="w-8 h-8 sm:w-9 sm:h-9 object-contain brightness-0 invert">
+              } @else {
+                <span class="text-2xl sm:text-3xl">{{ marcador.icono }}</span>
+              }
+            </button>
+
+            <!-- Globo explicativo al hacer clic -->
+            @if (marcadorActivoId === marcador.id) {
+              <div 
+                (click)="$event.stopPropagation()"
+                class="absolute top-1/2 -translate-y-1/2 w-56 sm:w-64 bg-white text-gray-700 p-4 rounded-2xl shadow-2xl border border-gray-100 z-30 text-center animate-fade-in"
+                [ngClass]="marcador.ladoGlobo === 'izquierda' ? 'right-full mr-4' : 'left-full ml-4'">
+                
+                <!-- Flechita lateral del globo apuntando al círculo -->
+                <div 
+                  class="absolute top-1/2 -translate-y-1/2 w-3.5 h-3.5 bg-white rotate-45 border-gray-100"
+                  [ngClass]="marcador.ladoGlobo === 'izquierda' ? '-right-1.5 border-t border-r' : '-left-1.5 border-b border-l'">
+                </div>
+
+                <p class="font-bold text-gray-900 text-xs sm:text-sm mb-1">{{ marcador.titulo }}</p>
+                <p class="text-xs sm:text-sm text-gray-600 leading-snug">
+                  {{ marcador.descripcion }}
+                </p>
+              </div>
+            }
+
+          </div>
+        }
       </div>
 
       <!-- Botones de Vistas (Transiciones dentro del mismo frame) -->
@@ -93,7 +143,7 @@
         </button>
       </div>
 
-      <!-- NUEVO: Botón guardar ruta -->
+      <!-- Botón guardar ruta -->
       <div class="flex justify-center w-full mt-5">
         <button
           type="button"
