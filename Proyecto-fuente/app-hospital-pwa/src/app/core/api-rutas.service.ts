@@ -7,7 +7,8 @@ import { Observable } from 'rxjs';
 })
 export class ApiRutasService {
   // Apunta al endpoint real del backend: /api/recorridos
-  private apiUrl = 'http://localhost:3000/api/recorridos';
+  //private apiUrl = 'http://localhost:3000/api/recorridos';
+  private apiUrl = '/api/recorridos';
 
   constructor(private http: HttpClient) { }
 
