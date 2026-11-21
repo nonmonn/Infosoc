@@ -1,11 +1,12 @@
 <div class="max-w-7xl mx-auto py-4 px-2 sm:px-4 font-sans relative">
 
   <!-- GRILLA PRINCIPAL DE 3 COLUMNAS -->
-  <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start"
+       [attr.inert]="mostrarTutorial() ? '' : null">
 
     <!-- 1. COLUMNA IZQUIERDA: SELECTOR DE DESTINO -->
     <div id="zona-selector"
-         class="lg:col-span-3 bg-white rounded-3xl p-6 shadow-sm border border-gray-100 flex flex-col items-center text-center transition-all"
+         class="scroll-mt-28 lg:col-span-3 bg-white rounded-3xl p-6 shadow-sm border border-gray-100 flex flex-col items-center text-center transition-all"
          [ngClass]="zonaActual() === 'selector' ? 'ring-4 ring-orange-400 relative z-50' : ''">
       
       <div class="w-16 h-16 bg-amarillo-oro rounded-full flex items-center justify-center mb-4 shadow-sm">
@@ -74,7 +75,7 @@
 
     <!-- 2. COLUMNA CENTRAL: RECTÁNGULO CON TRANSICIÓN DE EDIFICIOS -->
     <div id="zona-mapa"
-         class="lg:col-span-6 bg-white rounded-3xl p-6 sm:p-8 shadow-sm border border-gray-100 flex flex-col items-center justify-between transition-all"
+         class="scroll-mt-28 lg:col-span-6 bg-white rounded-3xl p-6 sm:p-8 shadow-sm border border-gray-100 flex flex-col items-center justify-between transition-all"
          [ngClass]="zonaActual() === 'mapa' ? 'ring-4 ring-orange-400 relative z-50' : ''">
       
       <!-- Cabecera dinámica -->
@@ -133,7 +134,7 @@
 
     <!-- 3. COLUMNA DERECHA: RUTAS FRECUENTES -->
     <div id="zona-frecuentes"
-         class="lg:col-span-3 flex flex-col gap-4 transition-all"
+         class="scroll-mt-28 lg:col-span-3 flex flex-col gap-4 transition-all"
          [ngClass]="zonaActual() === 'frecuentes' ? 'ring-4 ring-orange-400 rounded-3xl p-2 relative z-50 bg-white/60' : ''">
       
       <h3 class="text-sm font-bold text-gray-700 px-1">Rutas Frecuentes</h3>
@@ -189,8 +190,12 @@
 
   <!-- MODAL / GLOBO DEL TUTORIAL -->
   @if (mostrarTutorial()) {
-    <div class="fixed inset-0 bg-black/40 backdrop-blur-[1px] z-40 flex items-center justify-center p-4">
-      <div class="bg-white rounded-3xl p-6 max-w-sm w-full shadow-2xl border border-orange-100 z-50 text-center flex flex-col items-center">
+    <!-- Fondo oscuro (queda debajo de la zona resaltada) -->
+    <div class="fixed inset-0 bg-black/40 backdrop-blur-[1px] z-40"></div>
+
+    <!-- Globo del tutorial (siempre por encima de todo) -->
+    <div class="fixed inset-0 z-[60] flex items-end justify-center p-4 pointer-events-none">
+      <div class="pointer-events-auto bg-white rounded-3xl p-6 max-w-sm w-full shadow-2xl border border-orange-100 text-center flex flex-col items-center">
         <div class="w-14 h-14 bg-orange-100 rounded-full flex items-center justify-center text-2xl mb-3">
           {{ pasosTutorial[pasoActual()].icono }}
         </div>

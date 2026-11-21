@@ -1,4 +1,4 @@
-import { Component, HostListener, OnInit, PLATFORM_ID, computed, inject, signal } from '@angular/core';
+import { Component, HostListener, OnDestroy, OnInit, PLATFORM_ID, computed, effect, inject, signal } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { Router } from '@angular/router';
 
@@ -48,7 +48,7 @@ export interface PasoTutorial {
   styleUrl: './dashboard.css',
   templateUrl: './dashboard.html',
 })
-export class DashboardComponent implements OnInit {
+export class DashboardComponent implements OnInit, OnDestroy {
 
   // Imágenes de la vista general de edificios y del edificio de Psiquiatría
   imagenHospitalGeneral: string = '/imagenes/hospital_general.jpg';
@@ -122,13 +122,41 @@ export class DashboardComponent implements OnInit {
     this.zonaActual() === 'misrutas' ? this.rectMisRutas() : null
   );
 
-  constructor(private router: Router) {}
+  // Evita el scroll del usuario mientras el tutorial está abierto
+  private bloqueador = (e: Event) => e.preventDefault();
+
+  constructor(private router: Router) {
+    effect(() => {
+      if (!isPlatformBrowser(this.platformId)) return;
+      this.mostrarTutorial() ? this.bloquearScroll() : this.desbloquearScroll();
+    });
+  }
+
+  private bloquearScroll() {
+    document.documentElement.style.overflow = 'hidden';
+    document.body.style.overflow = 'hidden';
+    // Necesario en iOS/Safari, donde overflow:hidden no siempre basta
+    window.addEventListener('wheel', this.bloqueador, { passive: false });
+    window.addEventListener('touchmove', this.bloqueador, { passive: false });
+  }
+
+  private desbloquearScroll() {
+    document.documentElement.style.overflow = '';
+    document.body.style.overflow = '';
+    window.removeEventListener('wheel', this.bloqueador);
+    window.removeEventListener('touchmove', this.bloqueador);
+  }
+
+  ngOnDestroy() {
+    if (isPlatformBrowser(this.platformId)) this.desbloquearScroll();
+  }
 
   ngOnInit() {
     if (isPlatformBrowser(this.platformId)) {
       try {
         if (!localStorage.getItem(this.CLAVE_TUTORIAL)) {
           this.mostrarTutorial.set(true);
+          setTimeout(() => this.desplazarAZona(this.pasosTutorial[0].zona), 0);
         }
       } catch {
         // Ignorar si el navegador bloquea el almacenamiento
@@ -172,15 +200,17 @@ export class DashboardComponent implements OnInit {
 
   private desplazarAZona(zona: ZonaTutorial) {
     if (!isPlatformBrowser(this.platformId)) return;
-    if (window.innerWidth >= 1024) return;
 
     if (zona === 'misrutas') {
       window.scrollTo({ top: 0, behavior: 'smooth' });
       return;
     }
 
+    // En computador las zonas están lado a lado: se centran en pantalla.
+    // En celular van apiladas: se llevan al inicio de la pantalla.
+    const esComputador = window.innerWidth >= 1024;
     document.getElementById('zona-' + zona)
-      ?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      ?.scrollIntoView({ behavior: 'smooth', block: esComputador ? 'center' : 'start' });
   }
 
   private medirMisRutas() {
