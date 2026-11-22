@@ -9,8 +9,8 @@
          class="scroll-mt-28 lg:col-span-3 bg-white rounded-3xl p-6 shadow-sm border border-gray-100 flex flex-col items-center text-center transition-all"
          [ngClass]="zonaActual() === 'selector' ? 'ring-4 ring-orange-400 relative z-50' : ''">
       
-      <div class="w-16 h-16 bg-amarillo-oro rounded-full flex items-center justify-center mb-4 shadow-sm">
-        <span class="text-3xl">📍</span>
+      <div class="w-16 h-16 rounded-full overflow-hidden flex items-center justify-center mb-4 shadow-sm bg-white">
+        <img src="/imagenes/pictogramas/pin.png" alt="Destino" class="w-full h-full object-contain p-1">
       </div>
 
       <h3 class="text-lg font-bold text-gray-800 mb-1">¿Hacia dónde deseas ir?</h3>
@@ -135,9 +135,8 @@
       @for (item of destinosFrecuentes; track item.titulo) {
         <div class="bg-white rounded-3xl p-4 shadow-sm border border-gray-100 flex flex-col transition">
           <div class="flex items-center gap-4">
-            <div class="w-12 h-12 rounded-full flex items-center justify-center text-white shrink-0 shadow-sm"
-                 [ngClass]="item.color">
-              <span class="text-xl">📍</span>
+            <div class="w-12 h-12 rounded-full overflow-hidden flex items-center justify-center shrink-0 shadow-sm">
+              <img [src]="item.icono" [alt]="item.titulo" class="w-full h-full object-contain scale-110">
             </div>
 
             <div class="flex flex-col items-start grow">

@@ -29,7 +29,7 @@ export const RUTAS_HARDCODEADAS: Record<string, RecorridoRespuesta> = {
                 left: 74,
                 ladoGlobo: 'derecha',
                 icono: '🚗',
-                // imagenUrl: '/imagenes/pictogramas/vehiculos.svg',
+                imagenUrl: '/imagenes/pictogramas/vehiculos.png',
                 titulo: 'Precaución vehicular',
                 descripcion: 'Cuidado con los vehículos que pueden pasar por el acceso.'
               }
@@ -63,7 +63,7 @@ export const RUTAS_HARDCODEADAS: Record<string, RecorridoRespuesta> = {
                 left: 35,
                 ladoGlobo: 'derecha',
                 icono: '🔊',
-                // imagenUrl: '/imagenes/pictogramas/ruido.svg',
+                imagenUrl: '/imagenes/pictogramas/ruido.png',
                 titulo: 'Zona con ruido y personas',
                 descripcion: 'Es probable que en la sala de espera haya más personas conversando y ruido ambiental.'
               }
@@ -97,6 +97,7 @@ export const RUTAS_HARDCODEADAS: Record<string, RecorridoRespuesta> = {
                 left: 33,
                 ladoGlobo: 'derecha',
                 icono: '🚻',
+                imagenUrl:'/imagenes/pictogramas/bano.png',
                 titulo: 'Acceso al Baño 1',
                 descripcion: 'Puerta de acceso directo sin escaleras.'
               }
