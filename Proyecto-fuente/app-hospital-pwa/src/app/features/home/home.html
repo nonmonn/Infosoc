@@ -1,59 +1,183 @@
-<div class="max-w-5xl mx-auto space-y-12 mt-6">
-  
-  <!-- Sección Principal: ¿Qué hace la página? -->
-  <section class="bg-white rounded-3xl shadow-sm p-8 md:p-14 text-center border border-gray-100 relative overflow-hidden">
-    <!-- Línea decorativa superior con tus colores -->
-    <div class="absolute top-0 left-0 w-full h-2 bg-linear-to-r from-amarillo-oro via-amarillo-sol to-naranja-calido"></div>
-    
-    <h2 class="text-3xl md:text-5xl font-extrabold text-gray-800 mb-6 tracking-tight">
-      Tu guía visual dentro del hospital
-    </h2>
-    <p class="text-gray-600 text-lg md:text-xl max-w-2xl mx-auto leading-relaxed">
-      Te acompañamos paso a paso para que llegues a tu consulta o servicio médico de forma tranquila y segura. ¡Navega por el hospital a tu propio ritmo!
-    </p>
-  </section>
+<div class="min-h-screen bg-gray-50 px-4 py-8 sm:px-8 font-sans text-gray-800">
+  <div class="max-w-5xl mx-auto flex flex-col gap-8">
 
-  <!-- Sección Secundaria: ¿Cómo funciona? -->
-  <section class="bg-amarillo-oro/30 p-8 md:p-12 rounded-3xl shadow-sm">
-    <h3 class="text-2xl font-bold text-gray-800 mb-8 text-center">¿Cómo funciona?</h3>
-    
-    <!-- Grilla que en computador muestra 3 columnas y en celular 1 columna -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 auto-rows-fr">
+    <!-- 1. PORTADA / BIENVENIDA -->
+    <section class="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
+      <div class="h-2 w-full bg-gradient-to-r from-yellow-400 via-amber-400 to-orange-500"></div>
+      <div class="p-8 sm:p-12 text-center flex flex-col items-center">
+        <span class="bg-orange-50 text-orange-600 text-xs sm:text-sm font-bold px-4 py-1.5 rounded-full border border-orange-100 mb-4">
+          Hospital Provincial de Ovalle · Dr. Antonio Tirado Lanas
+        </span>
+        <h1 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight mb-4">
+          Tu guía visual y accesible dentro del hospital
+        </h1>
+        <p class="text-gray-500 max-w-2xl text-base sm:text-lg leading-relaxed mb-7">
+          Una plataforma diseñada para anticipar recorridos, reducir la incertidumbre y acompañar a cada paciente paso a paso dentro de las instalaciones del hospital.
+        </p>
+        <div class="flex flex-wrap justify-center gap-4">
+          <button
+            routerLink="/dashboard"
+            class="bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 px-8 rounded-full shadow-md transition cursor-pointer">
+            Explorar el Mapa Interactivo
+          </button>
+          <button
+            routerLink="/mis-rutas"
+            class="bg-white hover:bg-gray-50 text-gray-700 font-bold py-3 px-8 rounded-full border border-gray-200 transition cursor-pointer">
+            Ver Mis Rutas
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. MOTIVACIÓN DEL PROYECTO -->
+    <section class="bg-amber-50/70 rounded-3xl p-6 sm:p-10 border border-amber-100">
+      <div class="text-center max-w-2xl mx-auto mb-8">
+        <h2 class="text-2xl font-extrabold text-slate-900 mb-2">¿Por qué creamos esta plataforma?</h2>
+        <p class="text-sm sm:text-base text-gray-600 leading-relaxed">
+          Visitar un hospital grande puede generar estrés, desorientación o sobrecarga sensorial. Este proyecto nace para hacer el recinto más amigable, predecible e inclusivo, poniendo especial foco en niñas, niños, jóvenes y personas neurodivergentes.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+        <div class="bg-white rounded-2xl p-6 shadow-sm border border-amber-100/60 flex flex-col items-center text-center">
+          <div class="w-12 h-12 bg-orange-100 text-orange-600 rounded-2xl flex items-center justify-center text-2xl mb-4">
+            👁️
+          </div>
+          <h3 class="font-bold text-slate-900 text-base mb-2">Anticipación visual</h3>
+          <p class="text-sm text-gray-500 leading-relaxed">
+            Permite conocer los pasillos, puertas y salas desde casa antes de la cita médica, disminuyendo la ansiedad ante lo desconocido.
+          </p>
+        </div>
+
+        <div class="bg-white rounded-2xl p-6 shadow-sm border border-amber-100/60 flex flex-col items-center text-center">
+          <div class="w-12 h-12 bg-yellow-100 text-yellow-700 rounded-2xl flex items-center justify-center text-2xl mb-4">
+            🧩
+          </div>
+          <h3 class="font-bold text-slate-900 text-base mb-2">Apoyo con pictogramas</h3>
+          <p class="text-sm text-gray-500 leading-relaxed">
+            Integra avisos visuales sobre estímulos del entorno —como zonas con ruido, tránsito vehicular o mayor flujo de personas— para prepararse mejor.
+          </p>
+        </div>
+
+        <div class="bg-white rounded-2xl p-6 shadow-sm border border-amber-100/60 flex flex-col items-center text-center">
+          <div class="w-12 h-12 bg-orange-100 text-orange-600 rounded-2xl flex items-center justify-center text-2xl mb-4">
+            ♿
+          </div>
+          <h3 class="font-bold text-slate-900 text-base mb-2">Accesibilidad a tu ritmo</h3>
+          <p class="text-sm text-gray-500 leading-relaxed">
+            Ofrece rutas claras paso a paso, con alternativas sin escaleras y la opción de guardar trayectos frecuentes para consultarlos cuando los necesites.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. HISTORIA Y UBICACIÓN DEL HOSPITAL -->
+    <section class="grid grid-cols-1 md:grid-cols-2 gap-6">
       
-      <!-- Paso 1 -->
-      <div class="bg-white p-8 rounded-3xl shadow-sm border border-gray-50 flex flex-col items-center justify-center text-center hover:shadow-md transition-shadow">
-        <div class="bg-orange-50 text-naranja-intenso font-bold rounded-2xl w-16 h-16 flex items-center justify-center text-2xl mb-6 shadow-inner">
-          1
+      <!-- Historia -->
+      <div class="bg-white rounded-3xl p-6 sm:p-8 shadow-sm border border-gray-100 flex flex-col justify-between">
+        <div>
+          <span class="text-xs font-bold uppercase tracking-wider text-orange-500">Nuestra Historia</span>
+          <h2 class="text-2xl font-extrabold text-slate-900 mt-1 mb-4">Hospital Provincial de Ovalle</h2>
+          <p class="text-sm sm:text-base text-gray-600 leading-relaxed mb-4">
+            El <strong>Hospital Dr. Antonio Tirado Lanas</strong> es el principal recinto asistencial de la Provincia del Limarí, atendiendo a miles de familias de Ovalle y comunas cercanas como Monte Patria, Combarbalá, Punitaqui y Río Hurtado.
+          </p>
+          <p class="text-sm sm:text-base text-gray-600 leading-relaxed">
+            En <strong>2020</strong> dio un paso histórico al trasladarse desde su antiguo edificio en calle Ariztía hacia sus nuevas y modernas dependencias, ampliando significativamente su infraestructura, tecnología clínica y áreas de atención ambulatoria y de salud mental.
+          </p>
         </div>
-        <h4 class="text-xl font-semibold text-gray-800 mb-3">Busca tu destino</h4>
-        <p class="text-gray-500">Selecciona a qué departamento, consulta o área del hospital necesitas ir hoy.</p>
       </div>
 
-      <!-- Paso 2 -->
-      <div class="bg-white p-8 rounded-3xl shadow-sm border border-gray-50 flex flex-col items-center justify-center text-center hover:shadow-md transition-shadow">
-        <div class="bg-orange-50 text-naranja-intenso font-bold rounded-2xl w-16 h-16 flex items-center justify-center text-2xl mb-6 shadow-inner">
-          2
+      <!-- Ubicación y Datos Prácticos -->
+      <div class="bg-white rounded-3xl p-6 sm:p-8 shadow-sm border border-gray-100 flex flex-col justify-between">
+        <div>
+          <span class="text-xs font-bold uppercase tracking-wider text-orange-500">Ubicación y Acceso</span>
+          <h2 class="text-2xl font-extrabold text-slate-900 mt-1 mb-4">¿Dónde nos encontramos?</h2>
+          
+          <ul class="space-y-4 text-sm sm:text-base text-gray-600">
+            <li class="flex items-start gap-3">
+              <span class="w-9 h-9 rounded-xl bg-orange-50 text-orange-600 flex items-center justify-center shrink-0 text-lg">📍</span>
+              <div>
+                <p class="font-bold text-slate-800">Dirección</p>
+                <p>Ruta D-43, Kilómetro 1 (Sector La Chimba), Ovalle, Región de Coquimbo.</p>
+              </div>
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="w-9 h-9 rounded-xl bg-yellow-50 text-yellow-700 flex items-center justify-center shrink-0 text-lg">🚌</span>
+              <div>
+                <p class="font-bold text-slate-800">Conectividad</p>
+                <p>Acceso directo desde la carretera principal con paraderos de locomoción colectiva y estacionamientos habilitados frente al recinto.</p>
+              </div>
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="w-9 h-9 rounded-xl bg-orange-50 text-orange-600 flex items-center justify-center shrink-0 text-lg">🤝</span>
+              <div>
+                <p class="font-bold text-slate-800">Vinculación</p>
+                <p>Iniciativa desarrollada en colaboración con la Unidad de Participación y Vinculación del hospital.</p>
+              </div>
+            </li>
+          </ul>
         </div>
-        <h4 class="text-xl font-semibold text-gray-800 mb-3">Avanza a tu ritmo</h4>
-        <p class="text-gray-500">Camina siguiendo las flechas y los pictogramas que aparecerán en tu pantalla.</p>
       </div>
 
-      <!-- Paso 3 -->
-      <div class="bg-white p-8 rounded-3xl shadow-sm border border-gray-50 flex flex-col items-center justify-center text-center hover:shadow-md transition-shadow">
-        <div class="bg-orange-50 text-naranja-intenso font-bold rounded-2xl w-16 h-16 flex items-center justify-center text-2xl mb-6 shadow-inner">
-          3
-        </div>
-        <h4 class="text-xl font-semibold text-gray-800 mb-3">Llega sin estrés</h4>
-        <p class="text-gray-500">La guía te avisará claramente cuando hayas llegado a tu destino médico.</p>
-      </div>
-      
-    </div>
-  </section>
+    </section>
 
-  <!-- Botón de Acción Principal -->
-  <div class="text-center pb-10">
-    <button routerLink="/dashboard" class="bg-naranja-calido hover:bg-naranja-intenso text-white font-bold py-4 px-12 rounded-full shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1 text-xl">
-      Comenzar a Navegar
-    </button>
+    <!-- 4. EDIFICIOS Y SECTORES DEL RECINTO -->
+    <section class="bg-white rounded-3xl p-6 sm:p-10 shadow-sm border border-gray-100">
+      <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-6">
+        <div>
+          <span class="text-xs font-bold uppercase tracking-wider text-orange-500">Infraestructura</span>
+          <h2 class="text-2xl font-extrabold text-slate-900 mt-1">Edificios y Sectores Principales</h2>
+        </div>
+        <button
+          routerLink="/dashboard"
+          class="text-sm font-bold text-orange-600 hover:text-orange-700 transition cursor-pointer self-start sm:self-auto">
+          Ver distribución en el mapa →
+        </button>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div class="p-4 rounded-2xl bg-gray-50 border border-gray-100">
+          <div class="flex items-center gap-3 mb-2">
+            <span class="w-8 h-8 rounded-lg bg-blue-500 text-white font-bold flex items-center justify-center text-sm">A</span>
+            <h3 class="font-bold text-slate-800">Edificio A y B</h3>
+          </div>
+          <p class="text-xs sm:text-sm text-gray-500">
+            Área de atención clínica, hospitalización y accesos conectados con zonas seguras exteriores.
+          </p>
+        </div>
+
+        <div class="p-4 rounded-2xl bg-gray-50 border border-gray-100">
+          <div class="flex items-center gap-3 mb-2">
+            <span class="w-8 h-8 rounded-lg bg-amber-500 text-white font-bold flex items-center justify-center text-sm">C</span>
+            <h3 class="font-bold text-slate-800">Edificios C1 y C2</h3>
+          </div>
+          <p class="text-xs sm:text-sm text-gray-500">
+            Eje central del hospital con acceso principal, informaciones, salas de espera, baños y conexión a boxes de atención.
+          </p>
+        </div>
+
+        <div class="p-4 rounded-2xl bg-gray-50 border border-gray-100">
+          <div class="flex items-center gap-3 mb-2">
+            <span class="w-8 h-8 rounded-lg bg-indigo-500 text-white font-bold flex items-center justify-center text-sm">D-E</span>
+            <h3 class="font-bold text-slate-800">Edificios D y E</h3>
+          </div>
+          <p class="text-xs sm:text-sm text-gray-500">
+            Sectores de apoyo clínico, procedimientos y servicios especializados con estacionamientos cercanos.
+          </p>
+        </div>
+
+        <div class="p-4 rounded-2xl bg-yellow-50/70 border border-yellow-200 sm:col-span-2 lg:col-span-3">
+          <div class="flex items-center gap-3 mb-2">
+            <span class="w-8 h-8 rounded-lg bg-yellow-400 text-slate-900 font-bold flex items-center justify-center text-sm">G</span>
+            <h3 class="font-bold text-slate-900">Edificio G · Entrada de Psiquiatría y Psicología</h3>
+          </div>
+          <p class="text-xs sm:text-sm text-gray-600">
+            Sector dedicado a la atención de salud mental infanto-juvenil y adultos, con acceso diferenciado para brindar un entorno más tranquilo y resguardado.
+          </p>
+        </div>
+      </div>
+    </section>
+
   </div>
 </div>
