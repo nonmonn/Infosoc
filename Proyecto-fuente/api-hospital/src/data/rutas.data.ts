@@ -27,7 +27,7 @@ export const RUTAS_HARDCODEADAS: Record<string, RecorridoRespuesta> = {
                 id: 'vehiculos_entrada',
                 top: 48,
                 left: 74,
-                ladoGlobo: 'izquierda',
+                ladoGlobo: 'derecha',
                 icono: '🚗',
                 // imagenUrl: '/imagenes/pictogramas/vehiculos.svg',
                 titulo: 'Precaución vehicular',
@@ -94,7 +94,7 @@ export const RUTAS_HARDCODEADAS: Record<string, RecorridoRespuesta> = {
               {
                 id: 'puerta_bano',
                 top: 50,
-                left: 50,
+                left: 33,
                 ladoGlobo: 'derecha',
                 icono: '🚻',
                 titulo: 'Acceso al Baño 1',
