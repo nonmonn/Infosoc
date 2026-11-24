@@ -83,19 +83,19 @@ export class DashboardComponent implements OnInit, OnDestroy {
   necesitaAccesibilidad: boolean = false;
 
   destinosFrecuentes: DestinoFrecuente[] = [
-      {
-        titulo: 'Baños', descripcion: 'Servicios higiénicos', icono: '/imagenes/pictogramas/bano2.png', btn: 'Trazar ruta acá',
-        color: 'bg-naranja-calido', opciones: ['Entrada', 'Pasillo'], abierto: false
-      },
-      {
-        titulo: 'BOX', descripcion: 'Zona de atención', icono: '/imagenes/pictogramas/boxes2.png', btn: 'Trazar ruta acá',
-        color: 'bg-amarillo-oro', opciones: ['BOX 1', 'BOX 2', 'BOX Procedimientos'], abierto: false
-      },
-      {
-        titulo: 'Informaciones', descripcion: 'Mesón central', icono: '/imagenes/pictogramas/informaciones.png', btn: 'Trazar ruta acá',
-        color: 'bg-naranja-calido', opciones: ['Sala Espera - Recepción', 'Entrega Recetas'], abierto: false
-      }
-    ];
+    {
+      titulo: 'Baños', descripcion: 'Servicios higiénicos', icono: '/imagenes/pictogramas/bano2.png', btn: 'Trazar ruta acá',
+      color: 'bg-naranja-calido', opciones: ['Entrada', 'Pasillo'], abierto: false
+    },
+    {
+      titulo: 'BOX', descripcion: 'Zona de atención', icono: '/imagenes/pictogramas/boxes2.png', btn: 'Trazar ruta acá',
+      color: 'bg-amarillo-oro', opciones: ['BOX 1', 'BOX 2', 'BOX Procedimientos'], abierto: false
+    },
+    {
+      titulo: 'Informaciones', descripcion: 'Mesón central', icono: '/imagenes/pictogramas/informaciones.png', btn: 'Trazar ruta acá',
+      color: 'bg-naranja-calido', opciones: ['Sala Espera - Recepción', 'Entrega Recetas'], abierto: false
+    }
+  ];
 
   // --- TUTORIAL DE PRIMERA VEZ ---
   private platformId = inject(PLATFORM_ID);
