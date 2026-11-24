@@ -1,7 +1,12 @@
 <div class="relative">
   <!-- Barra superior blanca -->
   <header class="flex justify-between items-center bg-white p-4 rounded-2xl shadow-sm">
-      <h1 class="text-2xl font-bold text-gray-800">Proyecto Infosoc</h1>
+      <a routerLink="/" class="flex items-center gap-3 cursor-pointer">
+        <img 
+          src="/imagenes/logo.png" 
+          alt="Hospital Provincial de Ovalle" 
+          class="h-10 w-auto object-contain">
+      </a>
       
       <nav class="hidden md:flex items-center gap-6 text-gray-600 font-medium">
         <a routerLink="/" routerLinkActive="text-naranja-calido font-bold" [routerLinkActiveOptions]="{exact: true}" class="hover:text-naranja-intenso cursor-pointer transition-colors">Inicio</a>
