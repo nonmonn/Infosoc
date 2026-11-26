@@ -103,11 +103,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
   pasoActual = signal(0);
 
   pasosTutorial: PasoTutorial[] = [
-    { icono: '📍', titulo: 'Busca tu destino', texto: 'Aquí eliges a qué lugar del hospital necesitas ir hoy.', zona: 'selector' },
-    { icono: '👣', titulo: 'Avanza a tu ritmo', texto: 'Sigue las fotos y los pictogramas, paso a paso.', zona: 'mapa' },
-    { icono: '✅', titulo: 'Llega sin estrés', texto: 'Te avisaremos cuando hayas llegado.', zona: 'mapa' },
-    { icono: '⚡', titulo: 'Rutas frecuentes', texto: 'Atajos a los lugares más visitados: baños, boxes e informaciones.', zona: 'frecuentes' },
-    { icono: '⭐', titulo: 'Rutas guardadas', texto: 'En «Mis Rutas» verás las rutas que guardes para volver a usarlas.', zona: 'misrutas' }
+    { icono: '/imagenes/pictogramas/pin.png', titulo: 'Busca tu destino', texto: 'Aquí eliges a qué lugar del hospital necesitas ir hoy.', zona: 'selector' },
+    { icono: '/imagenes/pictogramas/pasos.png', titulo: 'Avanza a tu ritmo', texto: 'Sigue las fotos y los pictogramas, paso a paso.', zona: 'mapa' },
+    { icono: '/imagenes/pictogramas/check.png', titulo: 'Llega sin estrés', texto: 'Te avisaremos cuando hayas llegado.', zona: 'mapa' },
+    { icono: '/imagenes/pictogramas/rayo.png', titulo: 'Rutas frecuentes', texto: 'Atajos a los lugares más visitados: baños, boxes e informaciones.', zona: 'frecuentes' },
+    { icono: '/imagenes/pictogramas/estrella.png', titulo: 'Rutas guardadas', texto: 'En «Mis Rutas» verás las rutas que guardes para volver a usarlas.', zona: 'misrutas' }
   ];
 
   zonaActual = computed<ZonaTutorial | null>(() =>
