@@ -304,7 +304,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     const mapaFrecuentes: Record<string, string> = {
       'Baños Entrada': 'bano_1',
       'Baños Pasillo': 'bano_2',
-      'BOXES': 'boxes',
+      'BOX BOXES': 'boxes',
       'Informaciones Sala Espera - Recepción': 'recepcion_1',
       'Informaciones Entrega Recetas': 'entrega_recetas'
     };
