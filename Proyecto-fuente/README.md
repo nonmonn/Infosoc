@@ -78,3 +78,86 @@ ahora si las instrucciones :p
 
 - dsp de hacer todo, ejecutar en POWERSHELL como administrador esto para eliminar la regla de antes (hay que hacerlo por seguridad de nuestros pc lol):
     Remove-NetFirewallRule -DisplayName "App Hospital Frontend"
+
+## NUEVAS INSTRUCCIONES PARA LEVANTAR:
+
+## Cómo levantar el proyecto
+
+Puertos:
+- **http://localhost:8080** → versión para programar (`frontend`, se actualiza al guardar)
+- **http://localhost:8081** → versión final con modo sin internet (`web`)
+- **http://localhost:3000** → API
+- **localhost:3306** → base de datos MySQL
+
+Todos los comandos se corren desde la carpeta `Proyecto-fuente/`, donde está el `docker-compose.yml`.
+
+### A. Primera vez (o después de clonar el proyecto)
+
+1. Instalar el Service Worker (misma versión que Angular):
+   ```bash
+   docker compose run --rm frontend npm install @angular/service-worker@22.2.3
+   ```
+   No usar `--force` ni `--legacy-peer-deps`.
+
+2. Levantar todo:
+   ```bash
+   docker compose up -d --build frontend web api db
+   ```
+   La primera vez demora unos minutos porque compila Angular.
+
+3. Revisar que todo esté corriendo:
+   ```bash
+   docker compose ps
+   ```
+   Deben aparecer `frontend`, `web`, `api` y `hospital_mysql` en estado Up/running.
+
+4. Abrir en el navegador:
+   - http://localhost:8080 (desarrollo)
+   - http://localhost:8081 (versión final)
+
+### B. Para programar (día a día)
+
+```bash
+docker compose up -d frontend api db
+```
+Abrir http://localhost:8080. Los cambios se ven al guardar el archivo.
+
+### C. Para probar el modo sin internet en el celular
+
+1. Reconstruir la versión final (necesario después de cualquier cambio de código):
+   ```bash
+   docker compose up -d --build web api db
+   ```
+2. Revisar que cargue en http://localhost:8081.
+3. Crear el link para el celular:
+   ```bash
+   cloudflared tunnel --url http://localhost:8081
+   ```
+   Cloudflare muestra un link `https://....trycloudflare.com`. Ese es el que se abre en el celular.
+4. En el celular:
+   1. Abrir el link **con internet** y esperar a que cargue.
+   2. Entrar a una ruta y mirarla.
+   3. Activar el modo avión.
+   4. Volver a abrir la página. Si se ve, funciona sin conexión.
+
+### D. Para ver solo el diseño en el celular (sin probar modo offline)
+
+```bash
+cloudflared tunnel --url http://localhost:8080
+```
+Este link no sirve para probar el modo sin internet, solo para ver cómo se ve y se usa en el celular.
+
+### E. Apagar
+
+Apagar un servicio:
+```bash
+docker compose stop frontend
+```
+
+Apagar todo (los datos de la base de datos se conservan):
+```bash
+docker compose down
+```
+
+No usar `docker compose down -v`: borra también la base de datos.
+

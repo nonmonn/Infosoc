@@ -1,13 +1,11 @@
-
 services:
-  # 1. Servidor de la PWA (Angular)
+  # 1. Servidor de la PWA (Angular) - versión para programar
   frontend:
     build: 
       context: ./app-hospital-pwa
       dockerfile: Dockerfile
     ports:
-      - "4200:4200"
-    #command: npx ng serve --host 0.0.0.0
+      - "8080:4200"
     volumes:
       - ./app-hospital-pwa:/app
       - /app/node_modules
@@ -15,7 +13,8 @@ services:
       - CHOKIDAR_USEPOLLING=true
     depends_on:
       - api
-#servidor en node.js
+
+  # 2. Servidor en node.js
   api:
     build:
       context: ./api-hospital
@@ -48,6 +47,16 @@ services:
       - "3306:3306"
     volumes:
       - mysql_data:/var/lib/mysql
+
+  # 4. Versión de producción de la PWA (nginx) -> la que se expone con Cloudflare
+  web:
+    build:
+      context: ./app-hospital-pwa
+      dockerfile: Dockerfile.prod
+    ports:
+      - "8081:80"
+    depends_on:
+      - api
 
 volumes:
   mysql_data:
