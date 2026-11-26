@@ -1,0 +1,16 @@
+{
+  "name": "Rutas Psiquiatría - Hospital de Ovalle",
+  "short_name": "Rutas Hospital",
+  "description": "Recorrido con pictogramas para preparar tu visita al área de Psiquiatría",
+  "lang": "es-CL",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#FFFFFF",
+  "theme_color": "#F38918",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
