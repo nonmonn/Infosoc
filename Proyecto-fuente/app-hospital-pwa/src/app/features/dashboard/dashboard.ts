@@ -61,11 +61,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
       zonas: [
         { idNodo: 1, nombre: 'Baños - Entrada', codigoRuta: 'bano_1' },
         { idNodo: 2, nombre: 'Baños - Pasillo', codigoRuta: 'bano_2' },
-        { idNodo: 3, nombre: 'BOX 1', codigoRuta: 'box_1' },
-        { idNodo: 4, nombre: 'BOX 2', codigoRuta: 'box_2' },
-        { idNodo: 5, nombre: 'BOX Procedimientos', codigoRuta: 'box_procedimientos' },
+        { idNodo: 3, nombre: 'BOXES', codigoRuta: 'boxes' },
         { idNodo: 6, nombre: 'Sala Espera - Recepción', codigoRuta: 'recepcion_1' },
-        { idNodo: 7, nombre: 'Entrega Recetas', codigoRuta: 'entrega_recetas' }
+        //{ idNodo: 7, nombre: 'Entrega Recetas', codigoRuta: 'entrega_recetas' }
       ]
     },
     {
@@ -89,11 +87,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
     },
     {
       titulo: 'BOX', descripcion: 'Zona de atención', icono: '/imagenes/pictogramas/boxes2.png', btn: 'Trazar ruta acá',
-      color: 'bg-amarillo-oro', opciones: ['BOX 1', 'BOX 2', 'BOX Procedimientos'], abierto: false
+      color: 'bg-amarillo-oro', opciones: ['BOXES'], abierto: false
     },
     {
       titulo: 'Informaciones', descripcion: 'Mesón central', icono: '/imagenes/pictogramas/informaciones.png', btn: 'Trazar ruta acá',
-      color: 'bg-naranja-calido', opciones: ['Sala Espera - Recepción', 'Entrega Recetas'], abierto: false
+      color: 'bg-naranja-calido', opciones: ['Sala Espera - Recepción'], abierto: false
     }
   ];
 
@@ -268,9 +266,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
       const mapaNodos: Record<number, string> = {
         1: 'bano_1',
         2: 'bano_2',
-        3: 'box_1',
-        4: 'box_2',
-        5: 'box_procedimientos',
+        3: 'boxes',
         6: 'recepcion_1',
         7: 'entrega_recetas'
       };
@@ -308,9 +304,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     const mapaFrecuentes: Record<string, string> = {
       'Baños Entrada': 'bano_1',
       'Baños Pasillo': 'bano_2',
-      'BOX BOX 1': 'box_1',
-      'BOX BOX 2': 'box_2',
-      'BOX BOX Procedimientos': 'box_procedimientos',
+      'BOXES': 'boxes',
       'Informaciones Sala Espera - Recepción': 'recepcion_1',
       'Informaciones Entrega Recetas': 'entrega_recetas'
     };
